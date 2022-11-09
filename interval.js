@@ -54,15 +54,15 @@
 		}
 
 	streak.textContent += streakCounter;
-	prompt.textContent += notes[testNote]
+	prompt.textContent += testNote
 
 	function setNote(interval) {
 		document.body.style.background = "white";
 		testNote = interval
-		prompt.textContent = notes[interval]
+		prompt.textContent = interval
 		sampler.triggerAttackRelease([notes[1],notes[interval]], 1)
 
-		console.log(testNote)
+		//console.log(testNote)
 		guesses.textContent = ''
     }
 

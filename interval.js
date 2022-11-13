@@ -66,12 +66,17 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 	window.addEventListener('keydown', checkNote);
 
 
+	let fixedC = 0;
+	let visualInput = 0;
 	let hapticInput = 0;
+	let cheatInput = 0;
+
+	let hapticBase = 8;
 
 	let sustain = 1;
 	let trialDelay = 1500;
 	let sensoryDelay = 200;
-	let intranoteDelay = 0;
+	let intranoteDelay = 300;
 
 	let streakCounter = 0;
 
@@ -98,7 +103,6 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 		setTimeout(() => { setNote(testNote) }, 100)
 		}
 
-
 	streak.textContent += streakCounter;
 	prompt.textContent += testNote
 
@@ -108,7 +112,9 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 		sensoryDelay = $('#sensoryDelay').val();
 		intranoteDelay = $('#intranoteDelay').val();
 
-		hapticInput =  $('hapticInput').val();
+		if ($('#hapticInput').val() == 1){
+			hapticInput = 1;
+		}
 
 		if ($('#fixedC').val() == 1){
 			baseIndex = 24
@@ -128,14 +134,15 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 
 		sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], sustain)
 
+		if (hapticInput == 1) {
+			bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
 
-		bleInstance.requestSetChannelGainUpdate(haptic1,haptic1);
-		var delayInMilliseconds = 300; //0.1 second
-		setTimeout(function() {
-			let haptic2 = haptic1-indexval;
-			console.log(haptic2);
-			bleInstance.requestSetChannelGainUpdate(haptic2,haptic2);
-			}, delayInMilliseconds);
+			setTimeout(function () {
+				let hapticTop = hapticBase - indexval;
+				// console.log(intranoteDelay);
+				bleInstance.requestSetChannelGainUpdate(hapticTop, hapticTop);
+			}, 300);
+		}
 
 
 		guesses.textContent = ''

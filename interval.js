@@ -65,12 +65,6 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 
 	window.addEventListener('keydown', checkNote);
 
-
-	let fixedC = 0;
-	let visualInput = 0;
-	let hapticInput = 0;
-	let cheatInput = 0;
-
 	let hapticBase = 8;
 
 	let sustain = 1;
@@ -80,26 +74,11 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 
 	let streakCounter = 0;
 
-	let testNote = randomInterval(1, 8);
+	let testNote = randomIndexval(1, 8);
 	let baseIndex = 0;
 
-	// function intervalInKey(base){
-	// 	baseIndex = allNotes.indexOf(base)
-	// 	interval = randomInterval(1, 8)
-	// 	console.log("interval is")
-	// 	console.log(interval)
-	// 	numHalfSteps = majorIntervals(interval)
-	//
-	// 	topIndex = baseIndex + numHalfSteps
-	//
-	// 	console.log(topIndex)
-	// 	console.log(baseIndex)
-	//
-	// 	return (topIndex, baseIndex)
-	// }
-
 	function initialize(e){
-		testNote = randomInterval(0, 7)
+		testNote = randomIndexval(0, 7)
 		setTimeout(() => { setNote(testNote) }, 100)
 		}
 
@@ -132,14 +111,14 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 		prompt.textContent = indexval + 1
 		topIndex = baseIndex + majorIntervals[indexval]
 
-		sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], sustain)
-
 		if (hapticInput == 1) {
 			bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
 
+		sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], sustain)
+
+
 			setTimeout(function () {
-				let hapticTop = hapticBase - indexval;
-				// console.log(intranoteDelay);
+				let hapticTop = hapticBase - indexval
 				bleInstance.requestSetChannelGainUpdate(hapticTop, hapticTop);
 			}, 300);
 		}
@@ -148,7 +127,7 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 		guesses.textContent = ''
     }
 
-	function randomInterval(min, max) { 
+	function randomIndexval(min, max) {
  		return Math.floor(Math.random() * (max - min + 1) + min)
 	}
 
@@ -168,14 +147,18 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 			
 			//Generate new note
 			console.log("Correct")
-
 			baseIndex = baseIndex + majorIntervals[indexval]
+			console.log(baseIndex)
+
+			if (baseIndex > 36){
+				baseIndex = randomIndexval(0, 7)
+			}
 
 			if (fixedC == 1){
 				baseIndex = 24
 			}
 
-			testNote = randomInterval(0, 7)
+			testNote = randomIndexval(0, 7)
 			setTimeout(() => { setNote(testNote) }, trialDelay);
 		}
 

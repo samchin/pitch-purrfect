@@ -40,21 +40,21 @@
 			<div>Play Interval Manually</div>
 			
 			<div class="d-flex flex-row justify-content-between">
-				<button id="1Button" onclick="setNote(1)" class="btn btn-secondary btn-sm"
+				<button id="1Button" onclick="setNote(0)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">1</button>
-				<button id="2Button" onclick="setNote(2)" class="btn btn-secondary btn-sm"
+				<button id="2Button" onclick="setNote(1)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">2</button>
-				<button id="3Button" onclick="setNote(3)" class="btn btn-secondary btn-sm"
+				<button id="3Button" onclick="setNote(2)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">3</button>
-				<button id="4Button" onclick="setNote(4)" class="btn btn-secondary btn-sm"
+				<button id="4Button" onclick="setNote(3)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">4</button>
-				<button id="5Button" onclick="setNote(5)" class="btn btn-secondary btn-sm"
+				<button id="5Button" onclick="setNote(4)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">5</button>
-				<button id="6Button" onclick="setNote(6)" class="btn btn-secondary btn-sm"
+				<button id="6Button" onclick="setNote(5)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">6</button>
-				<button id="7Button" onclick="setNote(7)" class="btn btn-secondary btn-sm"
+				<button id="7Button" onclick="setNote(6)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">7</button>
-				<button id="8Button" onclick="setNote(8)" class="btn btn-secondary btn-sm"
+				<button id="8Button" onclick="setNote(7)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">8</button>
 			</div>
     
@@ -109,8 +109,8 @@
 
 			<input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">
 				<label for="visualInput"> Perception Game </label><br>
-			<input type="checkbox" id="hapticInput" name="hapticInput" value="hapticInput" class="">
-				<label for="hapticInput"> Fixed in C</label>
+			<input type="checkbox" id="fixedC" name="fixedC" value="fixedC" class="">
+				<label for="fixedC"> Fixed in C</label>
 			</div>
 
 			<div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
@@ -143,6 +143,16 @@
         </div>
 
         <script>
+			fixedC = 0;
+
+			$('#fixedC').change(function () {
+				if (this.checked) {
+					fixedC = 1;
+					baseIndex = 24;
+				} else {
+					fixedC = 0;
+				}
+			});
 
 			$('#visualInput').change(function () {
                 if (this.checked) {

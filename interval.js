@@ -43,13 +43,12 @@
 	const streak = document.getElementById('streak');
 
 	const regex = /\d+/g;
-	const notes = ["NULL", "C4", "D4", "E4", "F4", "G4", "A5", "B5", "C5"]
+	const notes = ["C4", "D4", "E4", "F4", "G4", "A5", "B5", "C5"]
 	const majorIntervals = [0, 2, 4, 5, 7, 9, 11, 12];
 	const allNotes = ["C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A3", "A#3", "B3",
 		"C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A4", "A#4", "B4",
 		"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A5", "A#5", "B5",
 		"C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5"]
-		// , "A6", "As6", "B6", ]
 
 	window.addEventListener('keydown', checkNote);
 
@@ -82,7 +81,7 @@
 	// }
 
 	function initialize(e){
-		testNote = randomInterval(1, 8)
+		testNote = randomInterval(0, 7)
 		setTimeout(() => { setNote(testNote) }, 100)
 		}
 
@@ -97,23 +96,25 @@
 		intranoteDelay = $('#intranoteDelay').val();
 
 		hapticInput =  $('hapticInput').val();
+
+		if ($('#fixedC').val() == 1){
+			baseIndex = 24
+		}
 	}
 
-	function setNote(interval) {
+	function setNote(indexval) {
+		// NOTE: indexval = interval - 1
+		// use indexval for anything that isn't user facing
+
 		setSettings();
 		document.body.style.background = "white";
-		testNote = interval
-		prompt.textContent = interval
 
-		topIndex = baseIndex + majorIntervals[interval]
-
-		console.log(interval)
-		console.log(baseIndex)
-		console.log(topIndex)
+		testNote = indexval
+		prompt.textContent = indexval + 1
+		topIndex = baseIndex + majorIntervals[indexval]
 
 		sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], sustain)
 
-		//console.log(testNote)
 		guesses.textContent = ''
     }
 
@@ -124,11 +125,12 @@
 	function checkNote(e) {
 		setSettings();
 
-		const keyinput = Number(e.code.match(regex))
+		const keynumber = Number(e.code.match(regex))
+		const indexval = keynumber - 1
 
-		if (keyinput === testNote){
+		if (indexval === testNote){
 			document.body.style.background = "#2a9d8f";
-			sampler.triggerAttackRelease([allNotes[baseIndex], allNotes[baseIndex + majorIntervals[keyinput]]], sustain)
+			sampler.triggerAttackRelease([allNotes[baseIndex], allNotes[baseIndex + majorIntervals[indexval]]], sustain)
 
 			//Streak
 			streakCounter++
@@ -136,18 +138,24 @@
 			
 			//Generate new note
 			console.log("Correct")
-			baseIndex= baseIndex + majorIntervals[keyinput]
-			testNote = randomInterval(1, 8)
+
+			baseIndex = baseIndex + majorIntervals[indexval]
+
+			if (fixedC == 1){
+				baseIndex = 24
+			}
+
+			testNote = randomInterval(0, 7)
 			setTimeout(() => { setNote(testNote) }, trialDelay);
 		}
 
 		else{
-			if (keyinput > 0){
+			if (indexval > 0){
 			document.body.style.background = "#e76f51";
-			guesses.textContent += keyinput
+			guesses.textContent += indexval
 			streakCounter = 0
 			streak.textContent = streakCounter;
-			sampler.triggerAttackRelease([allNotes[baseIndex], allNotes[baseIndex + majorIntervals[keyinput]]], sustain)
+			sampler.triggerAttackRelease([allNotes[baseIndex], allNotes[baseIndex + majorIntervals[indexval]]], sustain)
 			}
 			//console.log(keyinput)
 		}

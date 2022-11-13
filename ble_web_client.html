@@ -253,8 +253,8 @@ limitations under the License.
   }
 
   // Generate a BLE Manager with the UI update functions.
-  var bleInstance = new BleManager(logFunction, updateButtonState,
-    updateBatteryVoltage, updateTemperature, updateChannels, updateTuningKnobs,
+  var bleInstance = new BleManager(updateBatteryVoltage,logFunction, 
+    updateButtonState, updateTemperature, updateChannels, updateTuningKnobs,
     updatePlot, updateDeviceName);
 
 

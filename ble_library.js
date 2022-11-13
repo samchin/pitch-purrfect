@@ -234,8 +234,9 @@ class BleManager {
    * @param {function(): undefined=} updateNameUI  A function that updates
    *    the UI when a new device name is received.
    */
-  constructor(loggingFunction=noOp, onConnectionUIUpdate=noOp,
-      batteryVoltageUIUpdate=noOp,temperatureUIUpdate=noOp,
+  constructor(batteryVoltageUIUpdate=noOp,
+    loggingFunction=noOp, onConnectionUIUpdate=noOp,
+      temperatureUIUpdate=noOp,
       channelUIUpdate=noOp, tuningKnobsUIUpdate=noOp,
       updateStatsUI=noOp, updateNameUI=noOp) {
     this.log = loggingFunction;

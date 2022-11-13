@@ -1,5 +1,20 @@
 
 
+var bleInstance = new BleManager(updateBatteryVoltage);
+
+/**
+   * Updates UI elements when a new battery voltage is received from BLE.
+   * @param {float} num The new battery voltage.
+   */
+  function updateBatteryVoltage(num) {
+    var element = document.getElementById("batteryVoltage");
+    // Keep two decimal points.
+    element.innerHTML = parseFloat(num).toFixed(2) + " V";
+  }
+
+
+
+
 	const sampler = new Tone.Sampler({
 	urls: {
 	//   A0: "A0.mp3",
@@ -79,6 +94,15 @@
 		testNote = interval
 		prompt.textContent = interval
 		sampler.triggerAttackRelease([notes[1],notes[interval]], sustain)
+		let haptic1 = 8-1;
+		bleInstance.requestSetChannelGainUpdate(haptic1,haptic1);
+		var delayInMilliseconds = 300; //0.1 second
+		setTimeout(function() {
+			let haptic2 = haptic1-interval+1;
+			console.log(haptic2);
+            bleInstance.requestSetChannelGainUpdate(haptic2,haptic2);
+            }, delayInMilliseconds);
+
 
 		//console.log(testNote)
 		guesses.textContent = ''

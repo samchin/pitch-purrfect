@@ -50,7 +50,7 @@
 					style="border-width: 2px">4</button>
 				<button id="5Button" onclick="setNote(5)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">5</button>
-				<button id="6Button" onclick="setManual(6)" class="btn btn-secondary btn-sm"
+				<button id="6Button" onclick="setNote(6)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">6</button>
 				<button id="7Button" onclick="setNote(7)" class="btn btn-secondary btn-sm"
 					style="border-width: 2px">7</button>
@@ -60,9 +60,67 @@
     
 			<div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
         </div>
-        
+
+
+		<div id="devSettings" class="d-flex flex-column mb-3">
+
+			<div class="d-flex flex-row justify-content-between">
+				<div>0</div>
+				<div style="width: 70%;" class="d-flex flex-column align-items-center">
+					<input id="Sustain" type="range" min="0" max="2" step=".25" value="1" width="100%">
+					<div>sustain</div>
+				</div>
+				<div>2</div>
+			</div>
+
+			<div class="d-flex flex-row justify-content-between">
+				<br>
+					<div>100 ms</div>
+					<div style="width: 70%;" class="d-flex flex-column align-items-center">
+						<input id="trialDelay" type="range" min="100" max="3000" step="100" value="1500" width="100%">
+						<div>delay between trials</div>
+					</div>
+					<div>3000 ms</div>
+			</div>
+
+			<div class="d-flex flex-row justify-content-between">
+				<div>0</div>
+				<div style="width: 70%;" class="d-flex flex-column align-items-center">
+					<input id="sensoryDelay" type="range" min="0" max="1000" step="50" value="0" width="100%">
+					<div>delay between senses</div>
+				</div>
+				<div>1000</div>
+			</div>
+
+			<div class="d-flex flex-row justify-content-between">
+				<div>500</div>
+				<div style="width: 70%;" class="d-flex flex-column align-items-center">
+					<input id="intranoteDelay" type="range" min="0" max="100" step="10" value="0" width="100%">
+					<div>delay between notes</div>
+				</div>
+				<div>5000</div>
+			</div>
+
+
+
+			<div class="mt-2 " style="width: 100%; height: 1px; background: darkgray;"></div>
+			<br>
+			<div style="">
+
+			<input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">
+				<label for="visualInput"> Perception Game </label><br>
+			<input type="checkbox" id="hapticInput" name="hapticInput" value="hapticInput" class="">
+				<label for="hapticInput"> Fixed in C</label>
+			</div>
+
+			<div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
+		</div>
+
+
         <div class="d-flex flex-row">
-            <button id="testButton" onclick="setTest()" class="btn btn-secondary btn-sm"
+			<button id="trainButton" onclick="setTraining()" class="btn btn-secondary btn-sm"
+					style="border-width: 2px; border-color: grey;">Training</button>
+            <button id="testButton" onclick="setTest()" class="btn btn-secondary btn-sm ml-2"
                 style="border-width: 2px; border-color: grey;">Test</button>
             <button id="manualButton" onclick="setManual()" class="btn btn-secondary btn-sm ml-2"
                 style="border-width: 2px;">Manual</button>
@@ -70,57 +128,7 @@
                 style="border-width: 2px;">Dev</button>
         </div>
 
-		<script> 
-			function toggleManualSettings(enable) {
-				if (!enable) {
-					$('#manualSettings').removeClass("d-flex");
-					$('#manualSettings').hide();
-				} else {
-					$('#manualSettings').show();
-					$('#manualSettings').addClass("d-flex");
-				}
-			}
-			
-			toggleManualSettings(false);
-			
-			var isTest = true;
-			var isManual = false;
-			var isDev = false   
-			
-			function setTest() {
-				isManual = false;
-				isAutomatic = true;
-				isDev = false;
-				isScroll = false;
-				$("#testButton").css("border-color", "grey");
-				$("#manualButton").css("border-color", "transparent");
-				$("#devButton").css("border-color", "transparent")
-				toggleManualSettings(false);
-			}
-	
-			function setManual() {
-				isManual = true;
-				isAutomatic = false;
-				isDev = false;
-				isScroll = false;
-				$("#testButton").css("border-color", "transparent");
-				$("#manualButton").css("border-color", "grey");
-				$("#devButton").css("border-color", "transparent")
-				toggleManualSettings(true);
-			}
-	
-			function setDev() {
-				isManual = false;
-				isAutomatic = false;
-				isDev = true;
-				isScroll = false;
-				$("#testButton").css("border-color", "transparent");
-				$("#manualButton").css("border-color", "transparent");
-				$("#devButton").css("border-color", "grey")
-				toggleManualSettings(false);
-			}
-	
-		</script>
+		<script src="./modes.js" type="application/javascript"></script>
     </div>
 	
     <div style="position: absolute; left: 0px; bottom: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
@@ -135,7 +143,7 @@
         </div>
 
         <script>
-				
+
 			$('#visualInput').change(function () {
                 if (this.checked) {
 				pass;
@@ -158,9 +166,9 @@
 
 			$('#cheatInput').change(function () {
                 if (this.checked) {
-					$('#cheatSettings').show();
+					cheatSettings.hidden = false;
             	} else {
-					$('#cheatSettings').hide();
+					cheatSettings.hidden = true;
             	} 
             });
         </script>
@@ -172,7 +180,7 @@
 		$('#guesses').hide();
 	</script> 
 	
-	<div id="cheatSettings" class="">
+	<div hidden id="cheatSettings" class="">
 		<div class="d-flex justify-content-center align-items-center"
         style="position: absolute; width: 100%; height: 100%; z-index: 5">
 		<h1 id="prompt"></h1>

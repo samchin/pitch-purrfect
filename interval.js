@@ -1,3 +1,5 @@
+
+
 	const sampler = new Tone.Sampler({
 	urls: {
 	//   A0: "A0.mp3",
@@ -35,32 +37,48 @@
 	baseUrl: "https://tonejs.github.io/audio/salamander/"
   }).toDestination();
 
-  	const timeout = 1500
+	const now = Tone.now()
 	const prompt = document.getElementById('prompt');
 	const guesses = document.getElementById('guesses');
-	const streak = document.getElementById('streak');	
+	const streak = document.getElementById('streak');
 
 	const regex = /\d+/g;
 	const notes = ["NULL", "C4", "D4", "E4", "F4", "G4", "A5", "B5", "C5"]
+	const allKeys = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 
 	window.addEventListener('keydown', checkNote);
 
-	
+	let keySignature = "C";
+
+	let sustain = 1;
+	let trialDelay = 1500;
+	let sensoryDelay = 200;
+	let intranoteDelay = 0;
+
 	let streakCounter = 0;
 	let testNote = randomInterval(1, 8);
 
 	function initialize(e){
+		testNote = randomInterval(1, 8)
 		setTimeout(() => { setNote(testNote) }, 100)
 		}
 
 	streak.textContent += streakCounter;
 	prompt.textContent += testNote
 
+	function setSettings(e){
+		sustain = $('#Sustain').val();
+		trialDelay = $('#trialDelay').val();
+		sensoryDelay = $('#sensoryDelay').val();
+		intranoteDelay = $('#intranoteDelay').val();
+	}
+
 	function setNote(interval) {
+		setSettings();
 		document.body.style.background = "white";
 		testNote = interval
 		prompt.textContent = interval
-		sampler.triggerAttackRelease([notes[1],notes[interval]], 1)
+		sampler.triggerAttackRelease([notes[1],notes[interval]], sustain)
 
 		//console.log(testNote)
 		guesses.textContent = ''
@@ -70,29 +88,44 @@
  		return Math.floor(Math.random() * (max - min + 1) + min)
 	}
 
+	function playNotes(note1, note2){
+		if (intranoteDelay = 0) {
+			sampler.triggerAttackRelease([note1, note2], sustain)
+		}
+		if (intranoteDelay > 0) {
+			setTimeout(() => {sampler.triggerAttackRelease([note1], sustain)}, intranoteDelay);
+			sampler.triggerAttackRelease([note2], sustain)
+		}
+
+	}
+
 
 	function checkNote(e) {
+		setSettings();
+
 		const keyinput = Number(e.code.match(regex))
 
 		if (keyinput === testNote){
 			document.body.style.background = "#2a9d8f";
-			sampler.triggerAttackRelease([notes[1],notes[keyinput]], 1)
-			//Streak 
+			sampler.triggerAttackRelease([notes[1],notes[keyinput]], sustain)
+
+			//playNotes(notes[1], notes[keyinput]);
+			//Streak
 			streakCounter++
 			streak.textContent = streakCounter;
 			
 			//Generate new note
 			console.log("Correct")
 			newNote = randomInterval(1, 8)
-			setTimeout(() => { setNote(newNote) }, timeout);
+			setTimeout(() => { setNote(newNote) }, trialDelay);
 		}
 		else{
 			if (keyinput > 0){
 			document.body.style.background = "#e76f51";
-			guesses.textContent += keyinput 
+			guesses.textContent += keyinput
 			streakCounter = 0
 			streak.textContent = streakCounter;
-			sampler.triggerAttackRelease([notes[1],notes[keyinput]], 1)
+			sampler.triggerAttackRelease([notes[1],notes[keyinput]], sustain)
 			}
 			//console.log(keyinput)
 		}

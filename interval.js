@@ -111,18 +111,16 @@ var bleInstance = new BleManager(updateBatteryVoltage);
 		prompt.textContent = indexval + 1
 		topIndex = baseIndex + majorIntervals[indexval]
 
-		if (hapticInput == 1) {
-			bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
-
 		sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], sustain)
 
+		if (hapticInput == 1) {
+			bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
 
 			setTimeout(function () {
 				let hapticTop = hapticBase - indexval
 				bleInstance.requestSetChannelGainUpdate(hapticTop, hapticTop);
 			}, 300);
 		}
-
 
 		guesses.textContent = ''
     }

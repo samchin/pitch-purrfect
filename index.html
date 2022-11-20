@@ -15,17 +15,15 @@
             integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
             crossorigin="anonymous"></script>
 </head>
-
+<script src="./ble_library.js"></script>
 
 <div>
     <dialog id="startingDialog"
             style="width: 100% !important; height: 100% !important; z-index: 200; border-color: white;">
-        <button id="startGame" style="width: 100% !important; height: 100% !important;" onclick="initialize()"
+        <button id="startGame" style="width: 100% !important; height: 100% !important;" onclick="setTraining()"
                 class="btn btn-secondary btn-sm"
                 style="border-width: 2px"><h1>START GAME</h1></button>
     </dialog>
-
-    <script src="./ble_library.js"></script>
 
     <script>
         const startButton = document.getElementById("startGame");
@@ -34,43 +32,98 @@
         startButton.addEventListener("click", () => {
             bleInstance.connectionToggle();
             dialog.close("Play game");
+            initializeState();
+            initializeTrial();
+            sendData();
         });
 
         dialog.showModal();
+
 
     </script>
 </div>
 
 <body>
 
+<script>
+    let stateObject = {};
+    let trialObject = {};
+
+
+    function initializeTrial(indexval){
+        trialObject.startTime = Date.now();
+        trialObject.correctNote = indexval;
+        trialObject.userGuesses = Array(0);
+        trialObject.guessTime = Array(0);
+        trialObject.repeats = 0;
+        trialObject.endTime = 0;
+    }
+
+    function updateTrial(guesses, guessTime) {
+        trialObject.userGuesses.push(guesses);
+        trialObject.guessTime.push(guessTime);
+    }
+
+    function endTrial(guessTime){
+        trialObject.endTime = guessTime
+        sendData();
+    }
+
+function initializeState(){
+    stateObject.fixedC = 0;
+
+    stateObject.audioFeedback = 0;
+    stateObject.visualFeedback = 0;
+    stateObject.visualInput = 0;
+    stateObject.hapticInput = 0;
+    stateObject.cheatInput = 0;
+
+    stateObject.mode = "Training";
+
+    stateObject.sustain = 0;
+    stateObject.trialDelay = 1500;
+    stateObject.sensoryDelay = 200;
+    stateObject.intranoteDelay = 300;
+
+    stateObject.streak = 0;
+
+    stateObject.trialNumber = 0;
+    stateObject.trialObject = trialObject;
+}
+
+function sendData() {
+    console.log(JSON.stringify(stateObject))
+
+}</script>
+
 <div style="position: absolute; bottom: 0px; right: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
 
-<div id="manualSettings" class="d-flex flex-column mb-3">
+    <div id="manualSettings" class="d-flex flex-column mb-3">
         <div>Play Interval Manually</div>
 
         <div class="d-flex flex-row justify-content-between">
-            <button id="1Button" onclick="setNote(0)" class="btn btn-secondary btn-sm"
+            <button id="1Button" onclick="playNote(0)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">1
             </button>
-            <button id="2Button" onclick="setNote(1)" class="btn btn-secondary btn-sm"
+            <button id="2Button" onclick="playNote(1)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">2
             </button>
-            <button id="3Button" onclick="setNote(2)" class="btn btn-secondary btn-sm"
+            <button id="3Button" onclick="playNote(2)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">3
             </button>
-            <button id="4Button" onclick="setNote(3)" class="btn btn-secondary btn-sm"
+            <button id="4Button" onclick="playNote(3)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">4
             </button>
-            <button id="5Button" onclick="setNote(4)" class="btn btn-secondary btn-sm"
+            <button id="5Button" onclick="playNote(4)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">5
             </button>
-            <button id="6Button" onclick="setNote(5)" class="btn btn-secondary btn-sm"
+            <button id="6Button" onclick="playNote(5)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">6
             </button>
-            <button id="7Button" onclick="setNote(6)" class="btn btn-secondary btn-sm"
+            <button id="7Button" onclick="playNote(6)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">7
             </button>
-            <button id="8Button" onclick="setNote(7)" class="btn btn-secondary btn-sm"
+            <button id="8Button" onclick="playNote(7)" class="btn btn-secondary btn-sm"
                     style="border-width: 2px">8
             </button>
         </div>
@@ -123,17 +176,21 @@
         <br>
         <div style="">
 
-            <input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">
-            <label for="visualInput"> Perception Game </label><br>
+            <!--            <input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">-->
+            <!--            <label for="visualInput"> Perception Game </label><br>-->
             <input type="checkbox" id="fixedC" name="fixedC" value="fixedC" class="">
             <label for="fixedC"> Fixed in C</label>
+            <input type="checkbox" id="audioFeedback" name="audioFeedback" value="audioFeedback" class="">
+            <label for="audioFeedback"> Audio Feedback</label>
+            <input type="checkbox" id="visualFeedback" name="visualFeedback" value="visualFeedback" class="">
+            <label for="visualFeedback"> Visual Feedback</label>
         </div>
 
         <div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
 
         <br> <!-- Device status -->
 
-        <h6 id="batteryVoltage">Waiting for battery voltage...</h6>
+        <div id="batteryVoltage">Waiting for battery voltage...</div>
 
 
     </div>
@@ -154,7 +211,7 @@
         </button>
     </div>
 
-    <script src="./modes.js" type="application/javascript"></script>
+    <script src="./states.js" type="application/javascript"></script>
 </div>
 
 
@@ -169,55 +226,62 @@
         <label for="cheatInput"> Cheat Input </label><br>
     </div>
 
-    <script>
-        let fixedC = 0;
-        let visualInput = 0;
-        let hapticInput = 0;
-        let cheatInput = 0;
 
-        $('#fixedC').change(function () {
-            if (this.checked) {
-                fixedC = 1;
-                baseIndex = 24;
-            } else {
-                fixedC = 0;
-            }
-        });
-
-        $('#visualInput').change(function () {
-            if (this.checked) {
-                pass;
-                // $('#spinSettingds').hide();
-            } else {
-                pass;
-                // $('#spinSettingds').show();
-            }
-        });
-
-        $('#hapticInput').change(function () {
-            if (this.checked) {
-                hapticInput = 1;
-            } else {
-                hapticInput = 0;
-            }
-        });
-
-        $('#cheatInput').change(function () {
-            if (this.checked) {
-                cheatSettings.hidden = false;
-            } else {
-                cheatSettings.hidden = true;
-            }
-        });
-    </script>
 
 </div>
 
-<div style="position: absolute; bottom: 0px; right: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
+<div style="position: absolute; bottom: 0px; right: 50%; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
+    Press Space to Repeat Note
 </div>
+
 <p id="guesses"></p>
 <script>
-    $('#guesses').hide();
+    // $('#guesses').hide();
+
+
+    $('#fixedC').change(function () {
+        if (this.checked) {
+            stateObject.fixedC = 1;
+            baseIndex = 24;
+        } else {
+            fixedC = 0;
+        }
+    });
+
+    $('#audioFeedback').change(function () {
+        if (this.checked) {
+            stateObject.audioFeedback = 1;
+
+        } else {
+            stateObject.audioFeedback = 0;
+        }
+    });
+
+    $('#visualInput').change(function () {
+        if (this.checked) {
+            stateObject.visualInput = 1;
+        } else {
+            stateObject.visualInput = 0;
+        }
+    });
+
+    $('#hapticInput').change(function () {
+        if (this.checked) {
+            stateObject.hapticInput = 1;
+        } else {
+            stateObject.hapticInput = 0;
+        }
+    });
+
+    $('#cheatInput').change(function () {
+        if (this.checked) {
+            cheatSettings.hidden = false;
+            stateObject.cheatInput = 1;
+        } else {
+            cheatSettings.hidden = true;
+            stateObject.cheatInput = 0;
+        }
+    });
 </script>
 
 <div hidden id="cheatSettings" class="">
@@ -240,12 +304,5 @@
 <script src="https://tonejs.github.io/build/Tone.js"></script>
 
 <script src="./interval.js" type="application/javascript"></script>
-
-
-<script>
-
-
-</script>
-
 
 </html>

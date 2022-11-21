@@ -93,19 +93,20 @@ function setSettings(e){
 	}
 }
 
-function playNote(indexval, mode = "Harmonic" ) {
+function playNote(indexval, color) {
 
 	// NOTE: indexval = interval - 1
 	// use indexval for anything that isn't user facing
-	// document.body.style.background = "#ffffff";
+	document.body.style.background = color;
 
 	setSettings();
-	$('#guesses').hide();
-
 
 	trialObject.correctNote = indexval
 	prompt.textContent = indexval + 1
 	topIndex = stateObject.baseIndex + majorIntervals[indexval]
+	console.log("-----")
+	console.log("AUDIO")
+
 
 	if (stateObject.meloharmonic == "Harmonic") {
 		sampler.triggerAttackRelease([allNotes[stateObject.baseIndex], allNotes[topIndex]], stateObject.sustain)
@@ -119,9 +120,11 @@ function playNote(indexval, mode = "Harmonic" ) {
 		}, stateObject.intranoteDelay);
 	}
 
-
-	if (stateObject.hapticInput == 1) {
+	if (stateObject.hapticInput === 1) {
+		// if (stateObject.trialNumber%2 === 1) {
 		bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
+		console.log("HAPTIC")
+		console.log("-----")
 
 		setTimeout(function () {
 			let hapticTop = hapticBase - indexval
@@ -129,7 +132,7 @@ function playNote(indexval, mode = "Harmonic" ) {
 		}, 300);
 	}
 
-	guesses.textContent = ''
+	// guesses.textContent = ''
 }
 
 function randomIndexval(min, max) {
@@ -140,11 +143,12 @@ function newNote(indexval){//Generate new note
 
 	// console.log("Correct")
 
+
 	stateObject.baseIndex = stateObject.baseIndex + majorIntervals[indexval]
 	// console.log(stateObject.baseIndex)
 
 	if (stateObject.baseIndex >= 36) {
-		stateObject.baseIndex = randomIndexval(0, 7)
+		stateObject.baseIndex = 0;//randomIndexval(0, 7)
 	}
 
 	if (stateObject.fixedC === 1) {
@@ -156,8 +160,9 @@ function newNote(indexval){//Generate new note
 	trialObject.correctNote = randomIndexval(0, 7)
 
 	setTimeout(() => {
-		document.body.style.background = "#ffffff";
-		playNote(trialObject.correctNote)
+		guesses.style.display = "none";
+		// document.body.style.background = "#ffffff";
+		playNote(trialObject.correctNote, "#ffffff")
 	}, stateObject.trialDelay);
 
 
@@ -180,54 +185,64 @@ function checkNote(e) {
 	const guessTime = Date.now() - trialObject.startTime;
 	const keynumber = Number(e.code.match(regex))
 	const indexval = keynumber - 1
+	let color = "#ffffff"
 
 	setSettings();
 
 	if (stateObject.mode === "Test") { // SINGLE GUESS
 		endTrial(guessTime);
 		document.body.style.background = "#808080";
-		$('#guesses').hide();
+		guesses.style.display = "block";
 
 		newNote(indexval);
 	}
 
 	else { // MULTI-GUESS
-		if (indexval < 0) { // REPEAT
-			document.body.style.background = "#ffffff";
-			$('#guesses').hide();
 
-			playNote(trialObject.correctNote);
+		if (indexval < 0) { // REPEAT
+			// document.body.style.background = "#ffffff";
+			guesses.style.display = "none";
+
+			playNote(trialObject.correctNote, "#ffffff");
 			trialObject.repeats += 1;
 
 		} else {
+			guesses.textContent = indexval + 1;
+			guesses.style.display = "block";
+
 			trialObject.guessTimes.push(guessTime);
 			trialObject.userGuesses.push(indexval);
 
 			if (indexval === trialObject.correctNote) { // CORRECT
 				// Mark Correct
 				updateStreak("Correct");
-				document.body.style.background = "#2a9d8f";
-				guesses.textContent = indexval
+				// document.body.style.background = "#2a9d8f";
+				color = "#2a9d8f";
 
-				endTrial(guessTime);
-				playNote(indexval);
-
-				stateObject.trialNumber += 1;
-				newNote(indexval);
-
-			} else { // INCORRECT
+			} else
+			{ // INCORRECT
+				// Mark Correct
 				updateStreak("Incorrect");
-				document.body.style.background = "#e76f51";
-				guesses.textContent = indexval
+				//document.body.style.background ="#e76f51";
+				color = "#e76f51";
 
-				if (stateObject.audioFeedback === 1) {
-					sampler.triggerAttackRelease([allNotes[stateObject.baseIndex], allNotes[stateObject.baseIndex + majorIntervals[indexval]]], stateObject.sustain)
-
-				}
 			}
 
+			endTrial(guessTime);
+			document.body.style.background = color;
+
+			setTimeout(() => {
+
+				playNote(indexval, "#2a9d8f");
+			}, 700) // CATHYYYYYYY
+
+
+			stateObject.trialNumber += 1;
+			newNote(trialObject.correctNote);
 
 		}
+
+
 	}
 }
 

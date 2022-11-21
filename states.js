@@ -37,7 +37,7 @@ function initializeState(){
     stateObject.mode = "Training";
 
     stateObject.sustain = 0;
-    stateObject.trialDelay = 1500;
+    stateObject.trialDelay = 3500;
     stateObject.sensoryDelay = 200;
     stateObject.intranoteDelay = 700;
     stateObject.intrahapticDelay = 300;

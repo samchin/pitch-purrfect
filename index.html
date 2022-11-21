@@ -34,67 +34,14 @@
             dialog.close("Play game");
             initializeState();
             initializeTrial();
-            sendData();
         });
 
         dialog.showModal();
-
 
     </script>
 </div>
 
 <body>
-
-<script>
-    let stateObject = {};
-    let trialObject = {};
-
-
-    function initializeTrial(indexval){
-        trialObject.startTime = Date.now();
-        trialObject.correctNote = indexval;
-        trialObject.userGuesses = Array(0);
-        trialObject.guessTime = Array(0);
-        trialObject.repeats = 0;
-        trialObject.endTime = 0;
-    }
-
-    function updateTrial(guesses, guessTime) {
-        trialObject.userGuesses.push(guesses);
-        trialObject.guessTime.push(guessTime);
-    }
-
-    function endTrial(guessTime){
-        trialObject.endTime = guessTime
-        sendData();
-    }
-
-function initializeState(){
-    stateObject.fixedC = 0;
-
-    stateObject.audioFeedback = 0;
-    stateObject.visualFeedback = 0;
-    stateObject.visualInput = 0;
-    stateObject.hapticInput = 0;
-    stateObject.cheatInput = 0;
-
-    stateObject.mode = "Training";
-
-    stateObject.sustain = 0;
-    stateObject.trialDelay = 1500;
-    stateObject.sensoryDelay = 200;
-    stateObject.intranoteDelay = 300;
-
-    stateObject.streak = 0;
-
-    stateObject.trialNumber = 0;
-    stateObject.trialObject = trialObject;
-}
-
-function sendData() {
-    console.log(JSON.stringify(stateObject))
-
-}</script>
 
 <div style="position: absolute; bottom: 0px; right: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
 
@@ -165,12 +112,20 @@ function sendData() {
         <div class="d-flex flex-row justify-content-between">
             <div>500</div>
             <div style="width: 70%;" class="d-flex flex-column align-items-center">
-                <input id="intranoteDelay" type="range" min="0" max="1000" step="50" value="300" width="100%">
+                <input id="intranoteDelay" type="range" min="0" max="1000" step="50" value="700" width="100%">
                 <div>delay between notes</div>
             </div>
-            <div>5000</div>
+            <div>1000</div>
         </div>
 
+        <div class="d-flex flex-row justify-content-between">
+            <div>500</div>
+            <div style="width: 70%;" class="d-flex flex-column align-items-center">
+                <input id="intrahapticDelay" type="range" min="0" max="1000" step="50" value="300" width="100%">
+                <div>delay between haptics</div>
+            </div>
+            <div>1000</div>
+        </div>
 
         <div class="mt-2 " style="width: 100%; height: 1px; background: darkgray;"></div>
         <br>
@@ -211,18 +166,17 @@ function sendData() {
         </button>
     </div>
 
-    <script src="./states.js" type="application/javascript"></script>
 </div>
 
 
 <div style="position: absolute; left: 0px; bottom: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
     <b>Input Modalities</b>
     <div>
-        <input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">
+        <input type="checkbox" id="visualInput" name="Input" value="visualInput" class="mt-2">
         <label for="visualInput"> Visual Input </label><br>
-        <input type="checkbox" id="hapticInput" name="hapticInput" value="hapticInput" class="">
+        <input type="checkbox" id="hapticInput" name="Input" value="hapticInput" class="">
         <label for="hapticInput"> Haptic Input </label><br>
-        <input type="checkbox" id="cheatInput" name="cheatInput" value="cheatInput" class="">
+        <input type="checkbox" id="cheatInput" name="Input" value="cheatInput" class="">
         <label for="cheatInput"> Cheat Input </label><br>
     </div>
 
@@ -234,15 +188,30 @@ function sendData() {
     Press Space to Repeat Note
 </div>
 
-<p id="guesses"></p>
+<div>
+    <div class="d-flex justify-content-center align-items-center"
+         style="position: absolute; width: 100%; height: 60%; z-index: 5">
+        <h1 id="guesses"></h1>
+    </div>
+</div>
 <script>
+
     // $('#guesses').hide();
+    // $('#fixedC').addEventListener('change', () => {
+    //     if ( $('#fixedC').checked) {
+    //         stateObject.fixedC = 1;
+    //         baseIndex = 24;
+    //     } else {
+    //         stateObject.fixedC = 0;
+    //     }
+    //     sendData();
+    //
+    //     })
 
 
     $('#fixedC').change(function () {
         if (this.checked) {
-            stateObject.fixedC = 1;
-            baseIndex = 24;
+
         } else {
             fixedC = 0;
         }
@@ -286,8 +255,8 @@ function sendData() {
 
 <div hidden id="cheatSettings" class="">
     <div class="d-flex justify-content-center align-items-center"
-         style="position: absolute; width: 100%; height: 100%; z-index: 5">
-        <h1 id="prompt"></h1>
+         style="position: absolute; width: 100%; height: 40%; z-index: 5">
+        <h6 id="prompt"></h6>
     </div>
 </div>
 
@@ -302,7 +271,7 @@ function sendData() {
 
 
 <script src="https://tonejs.github.io/build/Tone.js"></script>
-
+<script src="./states.js" type="application/javascript"></script>
 <script src="./interval.js" type="application/javascript"></script>
 
 </html>

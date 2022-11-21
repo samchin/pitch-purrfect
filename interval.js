@@ -65,52 +65,60 @@ const allNotes = ["C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A3"
 window.addEventListener('keydown', checkNote);
 
 let hapticBase = 8;
+stateObject.baseIndex = 0;
+stateObject.streak = 0;
 
-
-// let sustain = 0;
-// let trialDelay = 1500;
-// let sensoryDelay = 200;
-// let intranoteDelay = 300;
-// let params = [sustain, trialDelay, sensoryDelay, intranoteDelay];
-
-let testNote = randomIndexval(1, 8);
-let baseIndex = 0;
+guesses.textContent = " ";
+streak.textContent += stateObject.streak;
+prompt.textContent += trialObject.correctNote;
 
 function initialize(e){
-	testNote = randomIndexval(0, 7)
-	setTimeout(() => { playNote(testNote) }, 100)
+	trialObject.correctNote = randomIndexval(0, 7)
+	setTimeout(() => { playNote(trialObject.correctNote) }, 100)
 }
-
-streak.textContent += stateObject.streak;
-prompt.textContent += testNote
 
 function setSettings(e){
 	stateObject.sustain = $('#Sustain').val();
 	stateObject.trialDelay = $('#trialDelay').val();
 	stateObject.sensoryDelay = $('#sensoryDelay').val();
 	stateObject.intranoteDelay = $('#intranoteDelay').val();
+	stateObject.intrahapticDelay = $('#intrahapticDelay').val();
 
 	if ($('#hapticInput').val() == 1){
 		stateObject.hapticInput = 1;
 	}
 
 	if ($('#fixedC').val() == 1){
-		stateObject.baseIndex = 24
+		stateObject.stateObject.baseIndex = 24
 	}
 }
 
-function playNote(indexval) {
+function playNote(indexval, mode = "Harmonic" ) {
+
 	// NOTE: indexval = interval - 1
 	// use indexval for anything that isn't user facing
-	document.body.style.background = "#ffffff";
+	// document.body.style.background = "#ffffff";
 
 	setSettings();
+	$('#guesses').hide();
 
-	testNote = indexval
+
+	trialObject.correctNote = indexval
 	prompt.textContent = indexval + 1
-	topIndex = baseIndex + majorIntervals[indexval]
+	topIndex = stateObject.baseIndex + majorIntervals[indexval]
 
-	sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], stateObject.sustain)
+	if (stateObject.meloharmonic == "Harmonic") {
+		sampler.triggerAttackRelease([allNotes[stateObject.baseIndex], allNotes[topIndex]], stateObject.sustain)
+	}
+
+	else{ //(stateObject.meloharmonic == "Melodic") {
+		sampler.triggerAttackRelease(allNotes[stateObject.baseIndex], stateObject.sustain)
+
+		setTimeout(function () {
+			sampler.triggerAttackRelease(allNotes[topIndex], stateObject.sustain)
+		}, stateObject.intranoteDelay);
+	}
+
 
 	if (stateObject.hapticInput == 1) {
 		bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
@@ -128,100 +136,95 @@ function randomIndexval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function checkNote(e) {
-	// if (stateObject.trialNumber %2 == 0){
-	// 	stateObject.hapticInput = 1;
-	// 	stateObject.cheatInput = 1;
-	// }
-	//
-	// if (stateObject.trialNumber %2 == 1){
-	// 	stateObject.hapticInput = 0;
-	// 	stateObject.cheatInput = 0;
-	// }
+function newNote(indexval){//Generate new note
 
-	const guessTime = Date.now();
+	// console.log("Correct")
+
+	stateObject.baseIndex = stateObject.baseIndex + majorIntervals[indexval]
+	// console.log(stateObject.baseIndex)
+
+	if (stateObject.baseIndex >= 36) {
+		stateObject.baseIndex = randomIndexval(0, 7)
+	}
+
+	if (stateObject.fixedC === 1) {
+		stateObject.baseIndex = 24
+	}
+
+	initializeTrial();
+
+	trialObject.correctNote = randomIndexval(0, 7)
+
+	setTimeout(() => {
+		document.body.style.background = "#ffffff";
+		playNote(trialObject.correctNote)
+	}, stateObject.trialDelay);
+
+
+
+}
+
+function updateStreak(result) {
+	if (result === "Incorrect") {
+		stateObject.streak = 0
+		streak.textContent = stateObject.streak;
+	}
+	if (result === "Correct") {
+		stateObject.streak++
+		streak.textContent = stateObject.streak;
+	}
+}
+
+
+function checkNote(e) {
+	const guessTime = Date.now() - trialObject.startTime;
 	const keynumber = Number(e.code.match(regex))
 	const indexval = keynumber - 1
 
 	setSettings();
-	sendData();
 
-	updateTrial(guesses.textContent, guessTime);
-
-	if (stateObject.mode === "Test") {
+	if (stateObject.mode === "Test") { // SINGLE GUESS
 		endTrial(guessTime);
 		document.body.style.background = "#808080";
-		baseIndex = baseIndex + majorIntervals[indexval]
+		$('#guesses').hide();
 
-		if (baseIndex > 36) {
-			baseIndex = randomIndexval(0, 7)
-		}
-
-		if (stateObject.fixedC == 1) {
-			baseIndex = 24
-		}
-
-		testNote = randomIndexval(0, 7)
-
-		initializeTrial(indexval);
-
-		setTimeout(() => {
-			playNote(testNote)
-		}, stateObject.trialDelay);
+		newNote(indexval);
 	}
 
-	else {
-		if (indexval < 0) {
-			playNote(testNote);
+	else { // MULTI-GUESS
+		if (indexval < 0) { // REPEAT
+			document.body.style.background = "#ffffff";
+			$('#guesses').hide();
+
+			playNote(trialObject.correctNote);
 			trialObject.repeats += 1;
 
 		} else {
+			trialObject.guessTimes.push(guessTime);
+			trialObject.userGuesses.push(indexval);
 
-			if (indexval === testNote) {
-				endTrial(guessTime);
-				stateObject.trialNumber += 1;
-
+			if (indexval === trialObject.correctNote) { // CORRECT
+				// Mark Correct
+				updateStreak("Correct");
 				document.body.style.background = "#2a9d8f";
-				sampler.triggerAttackRelease([allNotes[baseIndex], allNotes[baseIndex + majorIntervals[indexval]]], stateObject.sustain)
+				guesses.textContent = indexval
 
-				//Streak
-				stateObject.streak++
-				streak.textContent = stateObject.streak;
+				endTrial(guessTime);
+				playNote(indexval);
 
-				//Generate new note
-				console.log("Correct")
+				stateObject.trialNumber += 1;
+				newNote(indexval);
 
-				baseIndex = baseIndex + majorIntervals[indexval]
-				// console.log(baseIndex)
-
-				if (baseIndex > 36) {
-					baseIndex = randomIndexval(0, 7)
-				}
-
-				if (stateObject.fixedC === 1) {
-					baseIndex = 24
-				}
-
-				testNote = randomIndexval(0, 7)
-
-				setTimeout(() => {
-					playNote(testNote)
-				}, stateObject.trialDelay);
-
-				initializeTrial(indexval);
-
-			} else {
+			} else { // INCORRECT
+				updateStreak("Incorrect");
 				document.body.style.background = "#e76f51";
-				guesses.textContent += indexval
-				stateObject.streak = 0
-				streak.textContent = stateObject.streak;
+				guesses.textContent = indexval
 
 				if (stateObject.audioFeedback === 1) {
-					sampler.triggerAttackRelease([allNotes[baseIndex], allNotes[baseIndex + majorIntervals[indexval]]], stateObject.sustain)
+					sampler.triggerAttackRelease([allNotes[stateObject.baseIndex], allNotes[stateObject.baseIndex + majorIntervals[indexval]]], stateObject.sustain)
 
 				}
 			}
-			//console.log(keyinput)
 
 
 		}

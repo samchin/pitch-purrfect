@@ -2,6 +2,57 @@
 toggleManualSettings(false);
 toggleDevSettings(false);
 
+let stateObject = {};
+let trialObject = {};
+
+
+function initializeTrial(){
+    trialObject.startTime = Date.now();
+    trialObject.correctNote = 0;
+    trialObject.userGuesses = Array(0);
+    trialObject.guessTimes = Array(0);
+    trialObject.repeats = 0;
+    trialObject.endTime = 0;
+}
+
+
+function endTrial(guessTime){
+    trialObject.endTime = guessTime
+    sendData();
+}
+
+function initializeState(){
+    stateObject.fixedC = 0;
+    trialObject.baseIndex = 0;
+
+    stateObject.meloharmonic = "Melodic";
+
+    stateObject.audioFeedback = 0;
+    stateObject.visualFeedback = 0;
+
+    stateObject.visualInput = 0;
+    stateObject.hapticInput = 0;
+    stateObject.cheatInput = 0;
+
+    stateObject.mode = "Training";
+
+    stateObject.sustain = 0;
+    stateObject.trialDelay = 1500;
+    stateObject.sensoryDelay = 200;
+    stateObject.intranoteDelay = 700;
+    stateObject.intrahapticDelay = 300;
+
+    stateObject.streak = 0;
+
+    stateObject.trialNumber = 0;
+    stateObject.trialObject = trialObject;
+}
+
+function sendData() {
+    console.log(JSON.stringify(stateObject))
+
+}
+
 
 function toggleManualSettings(enable) {
     if (!enable) {

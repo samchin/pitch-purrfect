@@ -64,7 +64,8 @@ const allNotes = ["C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A3"
 
 window.addEventListener('keydown', checkNote);
 
-let hapticBase = 8;
+let numHaptic = 8;
+const hapArr = [9,0,1,2,6,5,4,3,7]
 
 
 // let sustain = 0;
@@ -100,6 +101,7 @@ function setSettings(e){
 }
 
 function playNote(indexval) {
+	console.log("playnote")
 	// NOTE: indexval = interval - 1
 	// use indexval for anything that isn't user facing
 	document.body.style.background = "#ffffff";
@@ -113,11 +115,18 @@ function playNote(indexval) {
 	sampler.triggerAttackRelease([allNotes[baseIndex],allNotes[topIndex]], stateObject.sustain)
 
 	if (stateObject.hapticInput == 1) {
+
+		let hapticBase = hapArr[numHaptic] //last haptic module
+		console.log("hapBase index: ")
+		console.log(hapticBase)
+
 		bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
 
 		setTimeout(function () {
-			let hapticTop = hapticBase - indexval
-			bleInstance.requestSetChannelGainUpdate(hapticTop, hapticTop);
+			let hapTop = hapArr[numHaptic-indexval]
+			console.log("hapTop index: ")
+			console.log(numHaptic-indexval)
+			bleInstance.requestSetChannelGainUpdate(hapTop, hapTop);
 		}, 300);
 	}
 

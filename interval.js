@@ -143,7 +143,6 @@ function newNote(indexval){//Generate new note
 
 	// console.log("Correct")
 
-
 	stateObject.baseIndex = stateObject.baseIndex + majorIntervals[indexval]
 	// console.log(stateObject.baseIndex)
 
@@ -160,6 +159,7 @@ function newNote(indexval){//Generate new note
 	trialObject.correctNote = randomIndexval(0, 7)
 
 	setTimeout(() => {
+
 		guesses.style.display = "none";
 		// document.body.style.background = "#ffffff";
 		playNote(trialObject.correctNote, "#ffffff")
@@ -207,7 +207,7 @@ function checkNote(e) {
 			trialObject.repeats += 1;
 
 		} else {
-			guesses.textContent = indexval + 1;
+			guesses.textContent = trialObject.correctNote + 1;
 			guesses.style.display = "block";
 
 			trialObject.guessTimes.push(guessTime);
@@ -225,24 +225,25 @@ function checkNote(e) {
 				updateStreak("Incorrect");
 				//document.body.style.background ="#e76f51";
 				color = "#e76f51";
-
 			}
 
 			endTrial(guessTime);
 			document.body.style.background = color;
 
 			setTimeout(() => {
-
-				playNote(indexval, "#2a9d8f");
+				guesses.textContent = trialObject.correctNote + 1;
+				playNote(trialObject.correctNote, "#2a9d8f");
 			}, 700) // CATHYYYYYYY
 
 
-			stateObject.trialNumber += 1;
-			newNote(trialObject.correctNote);
-
+			setTimeout(() => {
+				// document.body.style.background = "#ffffff";
+				// guesses.style.display = "none";
+				stateObject.trialNumber += 1;
+				newNote(trialObject.correctNote)}, 900 )
 		}
 
-
 	}
+
 }
 

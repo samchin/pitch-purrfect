@@ -207,7 +207,7 @@ function checkNote(e) {
 			trialObject.repeats += 1;
 
 		} else {
-			guesses.textContent = indexval + 1;
+			guesses.textContent = trialObject.correctNote + 1;
 			guesses.style.display = "block";
 
 			trialObject.guessTimes.push(guessTime);
@@ -231,14 +231,15 @@ function checkNote(e) {
 			endTrial(guessTime);
 			document.body.style.background = color;
 
+			// setTimeout(() => {
+			// 	guesses.textContent = trialObject.correctNote + 1;
+			//
+			// 	playNote(trialObject.correctNote, "#2a9d8f");
+			// }, 700) // CATHYYYYYYY
+			//
 			setTimeout(() => {
-
-				playNote(indexval, "#2a9d8f");
-			}, 700) // CATHYYYYYYY
-
-
-			stateObject.trialNumber += 1;
-			newNote(trialObject.correctNote);
+				stateObject.trialNumber += 1;
+				newNote(trialObject.correctNote)}, 200 )
 
 		}
 

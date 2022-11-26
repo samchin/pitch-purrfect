@@ -33,11 +33,11 @@ const sampler = new Tone.Sampler({
 		A4: "A4.mp3",
 		C5: "C5.mp3",
 		"D#5": "Ds5.mp3",
-		"F#5": "Fs5.mp3",
-		A5: "A5.mp3",
-		C6: "C6.mp3",
-		"D#6": "Ds6.mp3",
-		"F#6": "Fs6.mp3",
+		// "F#5": "Fs5.mp3",
+		// A5: "A5.mp3",
+		// C6: "C6.mp3",
+		// "D#6": "Ds6.mp3",
+		// "F#6": "Fs6.mp3",
 		//   A6: "A6.mp3",
 		//   C7: "C7.mp3",
 		//   "D#7": "Ds7.mp3",
@@ -57,24 +57,23 @@ const streak = document.getElementById('streak');
 const regex = /\d+/g;
 const notes = ["C4", "D4", "E4", "F4", "G4", "A5", "B5", "C5"]
 const majorIntervals = [0, 2, 4, 5, 7, 9, 11, 12];
-const allNotes = ["C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A3", "A#3", "B3",
-	"C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A4", "A#4", "B4",
-	"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A5", "A#5", "B5",
-	"C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5"]
+const allNotes = [	"C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
+					"C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
+					"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4"]
 
 window.addEventListener('keydown', checkNote);
 
 let hapticBase = 8;
-stateObject.baseIndex = 0;
+// stateObject.baseIndex = 20;
 stateObject.streak = 0;
 
 guesses.textContent = " ";
 streak.textContent += stateObject.streak;
-prompt.textContent += trialObject.correctNote;
+prompt.textContent += trialObject.correctIndexval;
 
 function initialize(e){
 	trialObject.correctNote = randomIndexval(0, 7)
-	setTimeout(() => { playNote(trialObject.correctNote) }, 100)
+	setTimeout(() => { playNote(trialObject.correctIndexval) }, 100)
 }
 
 function setSettings(e){
@@ -89,7 +88,7 @@ function setSettings(e){
 	}
 
 	if ($('#fixedC').val() == 1){
-		stateObject.stateObject.baseIndex = 24
+		stateObject.baseIndex = 24
 	}
 }
 
@@ -104,8 +103,8 @@ function playNote(indexval, color) {
 	trialObject.correctNote = indexval
 	prompt.textContent = indexval + 1
 	topIndex = stateObject.baseIndex + majorIntervals[indexval]
-	console.log("-----")
-	console.log("AUDIO")
+	// console.log("-----")
+	// console.log("AUDIO")
 
 
 	if (stateObject.meloharmonic == "Harmonic") {
@@ -139,16 +138,16 @@ function randomIndexval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function newNote(indexval){//Generate new note
+function newNote(oldIndexval){
 
-	// console.log("Correct")
+	// Make the old top index, the new base index by passing in the oldIndexval
+	stateObject.baseIndex = stateObject.baseIndex + majorIntervals[oldIndexval]
+	console.log(stateObject.baseIndex)
 
-
-	stateObject.baseIndex = stateObject.baseIndex + majorIntervals[indexval]
-	// console.log(stateObject.baseIndex)
-
-	if (stateObject.baseIndex >= 36) {
-		stateObject.baseIndex = 0;//randomIndexval(0, 7)
+	if (stateObject.baseIndex + majorIntervals[7] >= 35) {
+		//If the baseIndex + 12 (or majorIntervals[7]) would be over
+		// the total number of notes, set it as a new indexval between 0 - 7
+		stateObject.baseIndex = randomIndexval(0, 7)
 	}
 
 	if (stateObject.fixedC === 1) {
@@ -157,12 +156,12 @@ function newNote(indexval){//Generate new note
 
 	initializeTrial();
 
-	trialObject.correctNote = randomIndexval(0, 7)
+	trialObject.correctIndexval = randomIndexval(0, 7)
 
 	setTimeout(() => {
 		guesses.style.display = "none";
 		// document.body.style.background = "#ffffff";
-		playNote(trialObject.correctNote, "#ffffff")
+		playNote(trialObject.correctIndexval, "#ffffff")
 	}, stateObject.trialDelay);
 
 
@@ -203,17 +202,17 @@ function checkNote(e) {
 			// document.body.style.background = "#ffffff";
 			guesses.style.display = "none";
 
-			playNote(trialObject.correctNote, "#ffffff");
+			playNote(trialObject.correctIndexval, "#ffffff");
 			trialObject.repeats += 1;
 
 		} else {
-			guesses.textContent = trialObject.correctNote + 1;
+			guesses.textContent = trialObject.correctIndexval + 1;
 			guesses.style.display = "block";
 
 			trialObject.guessTimes.push(guessTime);
 			trialObject.userGuesses.push(indexval);
 
-			if (indexval === trialObject.correctNote) { // CORRECT
+			if (indexval === trialObject.correctIndexval) { // CORRECT
 				// Mark Correct
 				updateStreak("Correct");
 				// document.body.style.background = "#2a9d8f";
@@ -232,14 +231,14 @@ function checkNote(e) {
 			document.body.style.background = color;
 
 			// setTimeout(() => {
-			// 	guesses.textContent = trialObject.correctNote + 1;
+			// 	guesses.textContent = trialObject.correctIndexval + 1;
 			//
-			// 	playNote(trialObject.correctNote, "#2a9d8f");
+			// 	playNote(trialObject.correctIndexval, "#2a9d8f");
 			// }, 700) // CATHYYYYYYY
 			//
 			setTimeout(() => {
 				stateObject.trialNumber += 1;
-				newNote(trialObject.correctNote)}, 200 )
+				newNote(trialObject.correctIndexval)}, 200 )
 
 		}
 

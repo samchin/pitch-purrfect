@@ -8,7 +8,7 @@ let trialObject = {};
 
 function initializeTrial(){
     trialObject.startTime = Date.now();
-    trialObject.correctNote = 0;
+    trialObject.correctIndexval = 0;
     trialObject.userGuesses = Array(0);
     trialObject.guessTimes = Array(0);
     trialObject.repeats = 0;
@@ -23,7 +23,7 @@ function endTrial(guessTime){
 
 function initializeState(){
     stateObject.fixedC = 0;
-    trialObject.baseIndex = 0;
+    stateObject.baseIndex = 0;
 
     stateObject.meloharmonic = "Melodic";
 

@@ -82,49 +82,45 @@
     <div id="devSettings" class="d-flex flex-column mb-3">
 
         <div class="d-flex flex-row justify-content-between">
-            <div>0</div>
-            <div style="width: 70%;" class="d-flex flex-column align-items-center">
-                <input id="Sustain" type="range" min="0" max="2" step=".25" value="1" width="100%">
-                <div>sustain</div>
+            <div style="width: 100%;" class = "form-range">
+                <label for="Sustain">Sustain length (s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input id="Sustain" type="range" min="0" max="2" step=".25" value="1" oninput=" this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;1</output>
             </div>
-            <div>2</div>
         </div>
 
         <div class="d-flex flex-row justify-content-between">
             <br>
-            <div>100 ms</div>
-            <div style="width: 70%;" class="d-flex flex-column align-items-center">
-                <input id="trialDelay" type="range" min="100" max="4000" step="100" value="2000" width="100%">
-                <div>delay between trials</div>
+            <div style="width: 100%;" class="form-range">
+                <label for="trialDelay">Delay between Trials&nbsp;&nbsp;&nbsp;</label>
+                <input id="trialDelay" type="range" min="100" max="4000" step="100" value="2000" oninput=" this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;300</output>
             </div>
-            <div>3000 ms</div>
         </div>
 
         <div class="d-flex flex-row justify-content-between">
-            <div>0</div>
-            <div style="width: 70%;" class="d-flex flex-column align-items-center">
-                <input id="sensoryDelay" type="range" min="0" max="1000" step="50" value="300" width="100%">
-                <div>delay between senses</div>
+            <div style="width: 100%;" class="form-range">
+                <label for="sensoryDelay">Delay between Senses&nbsp;&nbsp;&nbsp;</label>
+                <input id="sensoryDelay" type="range" min="0" max="1000" step="50" value="300" oninput="this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;300&nbsp;&nbsp;&nbsp;</output>
             </div>
-            <div>1000</div>
         </div>
 
         <div class="d-flex flex-row justify-content-between">
-            <div>500</div>
-            <div style="width: 70%;" class="d-flex flex-column align-items-center">
-                <input id="intranoteDelay" type="range" min="0" max="1000" step="50" value="700" width="100%">
-                <div>delay between notes</div>
+            <div style="width: 100%;" class="form-range">
+                <label for="intranoteDelay">Delay between Notes&nbsp;&nbsp;&nbsp;</label>
+                <input id="intranoteDelay" type="range" min="0" max="1000" step="50" value="700" oninput="this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;700</output>
             </div>
-            <div>1000</div>
         </div>
 
         <div class="d-flex flex-row justify-content-between">
-            <div>500</div>
-            <div style="width: 70%;" class="d-flex flex-column align-items-center">
+            <div style="width: 100%;" class="form-range">
+                <label for="intrahapticDelay">Delay between Haptics&nbsp;&nbsp;&nbsp;</label>
                 <input id="intrahapticDelay" type="range" min="0" max="1000" step="50" value="300" width="100%">
-                <div>delay between haptics</div>
+                <output>&nbsp;&nbsp;300</output>
             </div>
-            <div>1000</div>
+
         </div>
 
         <div class="mt-2 " style="width: 100%; height: 1px; background: darkgray;"></div>
@@ -197,23 +193,13 @@
 <script>
 
     // $('#guesses').hide();
-    // $('#fixedC').addEventListener('change', () => {
-    //     if ( $('#fixedC').checked) {
-    //         stateObject.fixedC = 1;
-    //         baseIndex = 24;
-    //     } else {
-    //         stateObject.fixedC = 0;
-    //     }
-    //     sendData();
-    //
-    //     })
 
 
     $('#fixedC').change(function () {
         if (this.checked) {
-
+            stateObject.fixedC = 1;
         } else {
-            fixedC = 0;
+            stateObject.fixedC = 0;
         }
     });
 

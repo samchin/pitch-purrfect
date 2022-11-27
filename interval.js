@@ -76,6 +76,7 @@ function initialize(e){
 	setTimeout(() => { playNote(trialObject.correctIndexval) }, 100)
 }
 
+
 function setSettings(e){
 	stateObject.sustain = $('#Sustain').val();
 	stateObject.trialDelay = $('#trialDelay').val();
@@ -106,18 +107,11 @@ function playNote(indexval, color) {
 	// console.log("-----")
 	// console.log("AUDIO")
 
+	sampler.triggerAttackRelease(allNotes[stateObject.baseIndex], stateObject.sustain)
 
-	if (stateObject.meloharmonic == "Harmonic") {
-		sampler.triggerAttackRelease([allNotes[stateObject.baseIndex], allNotes[topIndex]], stateObject.sustain)
-	}
-
-	else{ //(stateObject.meloharmonic == "Melodic") {
-		sampler.triggerAttackRelease(allNotes[stateObject.baseIndex], stateObject.sustain)
-
-		setTimeout(function () {
-			sampler.triggerAttackRelease(allNotes[topIndex], stateObject.sustain)
-		}, stateObject.intranoteDelay);
-	}
+	setTimeout(function () {
+		sampler.triggerAttackRelease(allNotes[topIndex], stateObject.sustain)
+	}, stateObject.intranoteDelay);
 
 	if (stateObject.hapticInput === 1) {
 		// if (stateObject.trialNumber%2 === 1) {

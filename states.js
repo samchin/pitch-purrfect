@@ -25,8 +25,6 @@ function initializeState(){
     stateObject.fixedC = 0;
     stateObject.baseIndex = 0;
 
-    stateObject.meloharmonic = "Melodic";
-
     stateObject.audioFeedback = 0;
     stateObject.visualFeedback = 0;
 
@@ -36,7 +34,7 @@ function initializeState(){
 
     stateObject.mode = "Training";
 
-    stateObject.sustain = 0;
+    stateObject.sustain = 1;
     stateObject.trialDelay = 2000;
     stateObject.sensoryDelay = 200;
     stateObject.intranoteDelay = 700;
@@ -72,6 +70,10 @@ function toggleDevSettings(enable) {
         $('#devSettings').show();
         $('#devSettings').addClass("d-flex");
     }
+}
+
+function updateSliderValue(textid, val) {
+    document.getElementById(textid.value=$(val).val());
 }
 
 function blankButtons() {

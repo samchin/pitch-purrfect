@@ -63,8 +63,9 @@ const allNotes = [	"C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2
 
 window.addEventListener('keydown', checkNote);
 
-let hapticBase = 8;
 // stateObject.baseIndex = 20;
+let numHaptic = 8;
+const hapArr = [9,0,1,2,6,5,4,3,7]
 stateObject.streak = 0;
 
 guesses.textContent = " ";
@@ -115,13 +116,19 @@ function playNote(indexval, color) {
 
 	if (stateObject.hapticInput === 1) {
 		// if (stateObject.trialNumber%2 === 1) {
+		let hapticBase = hapArr[numHaptic] //last haptic module
+		console.log("hapBase index: ")
+		console.log(hapticBase)
+
 		bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
-		console.log("HAPTIC")
-		console.log("-----")
+		// console.log("HAPTIC")
+		// console.log("-----")
 
 		setTimeout(function () {
-			let hapticTop = hapticBase - indexval
-			bleInstance.requestSetChannelGainUpdate(hapticTop, hapticTop);
+			let hapTop = hapArr[numHaptic-indexval]
+			console.log("hapTop index: ")
+			console.log(numHaptic-indexval)
+			bleInstance.requestSetChannelGainUpdate(hapTop, hapTop);
 		}, 300);
 	}
 

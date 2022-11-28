@@ -43,13 +43,33 @@ function initializeState(){
     stateObject.streak = 0;
 
     stateObject.trialNumber = 0;
-    stateObject.trialObject = trialObject;
+    // stateObject.trialObject = trialObject;
 }
 
 function sendData() {
+    console.log(JSON.stringify(trialObject))
     console.log(JSON.stringify(stateObject))
+    var comb_json = Object.assign({}, stateObject, trialObject);
+    console.log(JSON.stringify(comb_json))
+
+
+    let json_str = JSON.stringify(trialObject)
+    const url = "https://script.google.com/macros/s/AKfycbwo6-LqbSpb8B2YM6W0xr5qHkO5sPUDZjiZu5oH01SZ362sGvm_LsWDRKvII7UzLAwKug/exec";
+    fetch(url,{
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'no-cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow', // manual, *follow, error
+    // body: JSON.stringify({"timestamp": 123,"keypress":"test"}) // body data type must match "Content-Type" header
+    body: JSON.stringify(comb_json)
+  });
 
 }
+
+
 
 
 function toggleManualSettings(enable) {

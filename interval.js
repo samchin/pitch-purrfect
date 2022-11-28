@@ -210,8 +210,8 @@ function checkNote(e) {
 			guesses.textContent = trialObject.correctIndexval + 1;
 			guesses.style.display = "block";
 
-			trialObject.guessTimes.push(guessTime);
-			trialObject.userGuesses.push(indexval);
+			trialObject.guessTimes = guessTime;
+			trialObject.userGuesses = indexval;
 
 			if (indexval === trialObject.correctIndexval) { // CORRECT
 				// Mark Correct

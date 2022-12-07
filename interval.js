@@ -61,7 +61,9 @@ const allNotes = [	"C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2
 					"C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
 					"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4"]
 
-window.addEventListener('keydown', checkNote);
+
+
+window.addEventListener('keydown', _.debounce(checkNote, 500));
 
 // stateObject.baseIndex = 20;
 let numHaptic = 8;
@@ -99,8 +101,8 @@ function playNote(indexval, color) {
 	// NOTE: indexval = interval - 1
 	// use indexval for anything that isn't user facing
 	document.body.style.background = color;
-
 	setSettings();
+
 
 	trialObject.correctNote = indexval
 	prompt.textContent = indexval + 1
@@ -115,23 +117,23 @@ function playNote(indexval, color) {
 	}, stateObject.intranoteDelay);
 
 	if (stateObject.hapticInput === 1) {
-		// if (stateObject.trialNumber%2 === 1) {
-		let hapticBase = hapArr[numHaptic] //last haptic module
-		console.log("hapBase index: ")
-		console.log(hapticBase)
+		if (stateObject.trialNumber % 2 === 1 || stateObject.mode === "Manual") {
+			let hapticBase = hapArr[numHaptic] //last haptic module
+			// console.log("hapBase index: ")
+			// console.log(hapticBase)
 
-		bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
-		// console.log("HAPTIC")
-		// console.log("-----")
+			bleInstance.requestSetChannelGainUpdate(hapticBase, hapticBase);
+			// console.log("HAPTIC")
+			// console.log("-----")
 
-		setTimeout(function () {
-			let hapTop = hapArr[numHaptic-indexval]
-			console.log("hapTop index: ")
-			console.log(numHaptic-indexval)
-			bleInstance.requestSetChannelGainUpdate(hapTop, hapTop);
-		}, 300);
+			setTimeout(function () {
+				let hapTop = hapArr[numHaptic - indexval]
+				// console.log("hapTop index: ")
+				// console.log(numHaptic - indexval)
+				bleInstance.requestSetChannelGainUpdate(hapTop, hapTop);
+			}, stateObject.intrahapticDelay);
+		}
 	}
-
 	// guesses.textContent = ''
 }
 
@@ -207,40 +209,43 @@ function checkNote(e) {
 			trialObject.repeats += 1;
 
 		} else {
-			guesses.textContent = trialObject.correctIndexval + 1;
-			guesses.style.display = "block";
 
-			trialObject.guessTimes = guessTime;
-			trialObject.userGuesses = indexval;
+			if (stateObject.mode === "Training") {
+				guesses.textContent = trialObject.correctIndexval + 1;
+				guesses.style.display = "block";
 
-			if (indexval === trialObject.correctIndexval) { // CORRECT
-				// Mark Correct
-				updateStreak("Correct");
-				// document.body.style.background = "#2a9d8f";
-				color = "#2a9d8f";
+				trialObject.guessTimes = guessTime;
+				trialObject.userGuesses = indexval;
 
-			} else
-			{ // INCORRECT
-				// Mark Correct
-				updateStreak("Incorrect");
-				//document.body.style.background ="#e76f51";
-				color = "#e76f51";
+				if (indexval === trialObject.correctIndexval) { // CORRECT
+					// Mark Correct
+					updateStreak("Correct");
+					// document.body.style.background = "#2a9d8f";
+					color = "#2a9d8f";
+
+				} else { // INCORRECT
+					// Mark Correct
+					updateStreak("Incorrect");
+					//document.body.style.background ="#e76f51";
+					color = "#e76f51";
+
+				}
+
+				endTrial(guessTime);
+				document.body.style.background = color;
+
+				// setTimeout(() => {
+				// 	guesses.textContent = trialObject.correctIndexval + 1;
+				//
+				// 	playNote(trialObject.correctIndexval, "#2a9d8f");
+				// }, 700) // CATHYYYYYYY
+				//
+				setTimeout(() => {
+					stateObject.trialNumber += 1;
+					newNote(trialObject.correctIndexval)
+				}, 200)
 
 			}
-
-			endTrial(guessTime);
-			document.body.style.background = color;
-
-			// setTimeout(() => {
-			// 	guesses.textContent = trialObject.correctIndexval + 1;
-			//
-			// 	playNote(trialObject.correctIndexval, "#2a9d8f");
-			// }, 700) // CATHYYYYYYY
-			//
-			setTimeout(() => {
-				stateObject.trialNumber += 1;
-				newNote(trialObject.correctIndexval)}, 200 )
-
 		}
 
 

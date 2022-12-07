@@ -16,24 +16,59 @@
             crossorigin="anonymous"></script>
 </head>
 <script src="./ble_library.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div>
+
+
     <dialog id="startingDialog"
             style="width: 100% !important; height: 100% !important; z-index: 200; border-color: white;">
-        <button id="startGame" style="width: 100% !important; height: 100% !important;" onclick="setTraining()"
+
+
+          <div class="align-self-center" style="position: absolute; width: 100%; height: 100%; z-index: 5">
+
+
+
+        <label for="deid">Deidentifer:</label>
+        <input type="text" id="deid" name="deid" required>
+
+        <span style="display:block; height: 20px;"></span>
+                  <label>
+                      I have input the deidentifer.
+                      <input id="allow-button" type="checkbox" />
+                  </label>
+                  <span style="display:block; height: 20px;"></span>
+
+        <button id="startGame" disabled style="width: 20% !important; height: 10% !important;" onclick="setTraining()"
                 class="btn btn-secondary btn-sm"
-                style="border-width: 2px"><h1>START GAME</h1></button>
+                style="border-width: 2px"><h1>START</h1></button>
+
+          </div>
+
     </dialog>
 
     <script>
         const startButton = document.getElementById("startGame");
         const dialog = document.getElementById("startingDialog");
+        const allowButtonCheckbox = document.getElementById("allow-button");
+        const startGame = document.getElementById("startGame");
+
+        deid.addEventListener("input", () => {
+        });
+        allowButtonCheckbox.addEventListener("change", (event) => {
+            startGame.disabled = !event.target.checked;
+        }, false);
 
         startButton.addEventListener("click", () => {
-            bleInstance.connectionToggle();
+
+            setTimeout(() => {
+                bleInstance.connectionToggle();
+            }, 100)
+
             dialog.close("Play game");
             initializeState();
             initializeTrial();
+            stateObject.deId = document.getElementById("deid").value;
+            console.log(stateObject.deId)
         });
 
         dialog.showModal();
@@ -109,7 +144,7 @@
         <div class="d-flex flex-row justify-content-between">
             <div style="width: 100%;" class="form-range">
                 <label for="intranoteDelay">Delay between Notes&nbsp;&nbsp;&nbsp;</label>
-                <input id="intranoteDelay" type="range" min="0" max="1000" step="50" value="700" oninput="this.nextElementSibling.value = this.value">
+                <input id="intranoteDelay" type="range" min="0" max="3000" step="50" value="700" oninput="this.nextElementSibling.value = this.value">
                 <output>&nbsp;&nbsp;700</output>
             </div>
         </div>
@@ -117,8 +152,9 @@
         <div class="d-flex flex-row justify-content-between">
             <div style="width: 100%;" class="form-range">
                 <label for="intrahapticDelay">Delay between Haptics&nbsp;&nbsp;&nbsp;</label>
-                <input id="intrahapticDelay" type="range" min="0" max="1000" step="50" value="300" width="100%">
-                <output>&nbsp;&nbsp;300</output>
+                <input id="intrahapticDelay" type="range" min="0" max="3000" step="50" value="700" width="100%" oninput="this.nextElementSibling.value = this.value">
+
+                <output>&nbsp;&nbsp;700</output>
             </div>
 
         </div>

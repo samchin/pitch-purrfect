@@ -22,6 +22,7 @@ function endTrial(guessTime){
 }
 
 function initializeState(){
+    stateObject.deId = "";
     stateObject.fixedC = 0;
     stateObject.baseIndex = 0;
 
@@ -38,7 +39,7 @@ function initializeState(){
     stateObject.trialDelay = 2000;
     stateObject.sensoryDelay = 200;
     stateObject.intranoteDelay = 700;
-    stateObject.intrahapticDelay = 300;
+    stateObject.intrahapticDelay = 700;
 
     stateObject.streak = 0;
 
@@ -109,6 +110,7 @@ function setTraining() {
     stateObject.mode = "Training"
     $("#trainButton").css("border-color", "grey");
     initialize();
+
 }
 
 function setTest() {
@@ -119,7 +121,7 @@ function setTest() {
 }
 
 function setManual() {
-    initializeState();
+    // initialize();
     sendData();
     blankButtons();
     stateObject.mode = "Manual";

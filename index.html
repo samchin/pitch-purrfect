@@ -1,196 +1,299 @@
 <!doctype html>
 <html lang="en">
-  <head>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Interval Game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-	integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-  </head>
-  
-  
-  <div> 
-		<dialog id="startingDialog" style="width: 100% !important; height: 100% !important; z-index: 200; border-color: white;">
-			<button id="startGame" style = "width: 100% !important; height: 100% !important;" onclick="initialize()" class="btn btn-secondary btn-sm"
-			style="border-width: 2px"><h1>START GAME</h1></button>
-		</dialog>
-	
-	<script> 
-		const startButton = document.getElementById("startGame");
-		const dialog = document.getElementById("startingDialog");
-		
-		startButton.addEventListener("click", () => {
-		dialog.close("Play game");
-		});
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+            crossorigin="anonymous"></script>
+</head>
+<script src="./ble_library.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<div>
 
-		dialog.showModal();
-		
-	</script>
-  </div>
-  
-  <body>
-	<div style="position: absolute; bottom: 0px; right: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
-       
-		<div id="manualSettings" class="d-flex flex-column mb-3">
-			<div>Play Interval Manually</div>
-			
-			<div class="d-flex flex-row justify-content-between">
-				<button id="1Button" onclick="setNote(1)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">1</button>
-				<button id="2Button" onclick="setNote(2)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">2</button>
-				<button id="3Button" onclick="setNote(3)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">3</button>
-				<button id="4Button" onclick="setNote(4)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">4</button>
-				<button id="5Button" onclick="setNote(5)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">5</button>
-				<button id="6Button" onclick="setManual(6)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">6</button>
-				<button id="7Button" onclick="setNote(7)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">7</button>
-				<button id="8Button" onclick="setNote(8)" class="btn btn-secondary btn-sm"
-					style="border-width: 2px">8</button>
-			</div>
-    
-			<div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
-        </div>
-        
-        <div class="d-flex flex-row">
-            <button id="testButton" onclick="setTest()" class="btn btn-secondary btn-sm"
-                style="border-width: 2px; border-color: grey;">Test</button>
-            <button id="manualButton" onclick="setManual()" class="btn btn-secondary btn-sm ml-2"
-                style="border-width: 2px;">Manual</button>
-            <button id="devButton" onclick="setDev()" class="btn btn-secondary btn-sm ml-2"
-                style="border-width: 2px;">Dev</button>
-        </div>
 
-		<script> 
-			function toggleManualSettings(enable) {
-				if (!enable) {
-					$('#manualSettings').removeClass("d-flex");
-					$('#manualSettings').hide();
-				} else {
-					$('#manualSettings').show();
-					$('#manualSettings').addClass("d-flex");
-				}
-			}
-			
-			toggleManualSettings(false);
-			
-			var isTest = true;
-			var isManual = false;
-			var isDev = false   
-			
-			function setTest() {
-				isManual = false;
-				isAutomatic = true;
-				isDev = false;
-				isScroll = false;
-				$("#testButton").css("border-color", "grey");
-				$("#manualButton").css("border-color", "transparent");
-				$("#devButton").css("border-color", "transparent")
-				toggleManualSettings(false);
-			}
-	
-			function setManual() {
-				isManual = true;
-				isAutomatic = false;
-				isDev = false;
-				isScroll = false;
-				$("#testButton").css("border-color", "transparent");
-				$("#manualButton").css("border-color", "grey");
-				$("#devButton").css("border-color", "transparent")
-				toggleManualSettings(true);
-			}
-	
-			function setDev() {
-				isManual = false;
-				isAutomatic = false;
-				isDev = true;
-				isScroll = false;
-				$("#testButton").css("border-color", "transparent");
-				$("#manualButton").css("border-color", "transparent");
-				$("#devButton").css("border-color", "grey")
-				toggleManualSettings(false);
-			}
-	
-		</script>
-    </div>
-	
-    <div style="position: absolute; left: 0px; bottom: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
-        <b>Input Modalities</b>
-        <div>
-            <input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">
-            <label for="visualInput"> Visual Input </label><br>         
-			<input type="checkbox" id="hapticInput" name="hapticInput" value="hapticInput" class="">
-            <label for="hapticInput"> Haptic Input </label><br>
-			<input type="checkbox" id="cheatInput" name="cheatInput" value="cheatInput" class="">
-            <label for="cheatInput"> Cheat Input </label><br>
+    <dialog id="startingDialog"
+            style="width: 100% !important; height: 100% !important; z-index: 200; border-color: white;">
+
+
+          <div class="align-self-center" style="position: absolute; width: 100%; height: 100%; z-index: 5">
+
+
+
+        <label for="deid">Deidentifer:</label>
+        <input type="text" id="deid" name="deid" required>
+
+        <span style="display:block; height: 20px;"></span>
+                  <label>
+                      I have input the deidentifer.
+                      <input id="allow-button" type="checkbox" />
+                  </label>
+                  <span style="display:block; height: 20px;"></span>
+
+        <button id="startGame" disabled style="width: 20% !important; height: 10% !important;" onclick="setTraining()"
+                class="btn btn-secondary btn-sm"
+                style="border-width: 2px"><h1>START</h1></button>
+
+          </div>
+
+    </dialog>
+
+    <script>
+        const startButton = document.getElementById("startGame");
+        const dialog = document.getElementById("startingDialog");
+        const allowButtonCheckbox = document.getElementById("allow-button");
+        const startGame = document.getElementById("startGame");
+
+        deid.addEventListener("input", () => {
+        });
+        allowButtonCheckbox.addEventListener("change", (event) => {
+            startGame.disabled = !event.target.checked;
+        }, false);
+
+        startButton.addEventListener("click", () => {
+
+            setTimeout(() => {
+                bleInstance.connectionToggle();
+            }, 100)
+
+            dialog.close("Play game");
+            initializeState();
+            initializeTrial();
+            stateObject.deId = document.getElementById("deid").value;
+            console.log(stateObject.deId)
+        });
+
+        dialog.showModal();
+
+    </script>
+</div>
+
+<body>
+
+<div style="position: absolute; bottom: 0px; right: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
+
+    <div id="manualSettings" class="d-flex flex-column mb-3">
+        <div>Play Interval Manually</div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <button id="1Button" onclick="playNote(0)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">1
+            </button>
+            <button id="2Button" onclick="playNote(1)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">2
+            </button>
+            <button id="3Button" onclick="playNote(2)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">3
+            </button>
+            <button id="4Button" onclick="playNote(3)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">4
+            </button>
+            <button id="5Button" onclick="playNote(4)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">5
+            </button>
+            <button id="6Button" onclick="playNote(5)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">6
+            </button>
+            <button id="7Button" onclick="playNote(6)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">7
+            </button>
+            <button id="8Button" onclick="playNote(7)" class="btn btn-secondary btn-sm"
+                    style="border-width: 2px">8
+            </button>
         </div>
 
-        <script>
-				
-			$('#visualInput').change(function () {
-                if (this.checked) {
-				pass;
-                // $('#spinSettingds').hide();
-            } else {
-				pass;
-                // $('#spinSettingds').show();
-            }
-            });
-
-            $('#hapticInput').change(function () {
-                if (this.checked) {
-					pass;
-                    // hapticInputEnableControl.send([176, 16, 127]);
-                } else {
-					pass;
-                    // hapticInputEnableControl.send([176, 16, 0]);
-                }
-            });
-
-			$('#cheatInput').change(function () {
-                if (this.checked) {
-					$('#cheatSettings').show();
-            	} else {
-					$('#cheatSettings').hide();
-            	} 
-            });
-        </script>
-
+        <div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
     </div>
 
-	<p id="guesses"></p>
-	<script>
-		$('#guesses').hide();
-	</script> 
-	
-	<div id="cheatSettings" class="">
-		<div class="d-flex justify-content-center align-items-center"
-        style="position: absolute; width: 100%; height: 100%; z-index: 5">
-		<h1 id="prompt"></h1>
-		</div>
-	</div>
 
-	<div id="streakBox" class="">
-		<div style="position: absolute; right: 0px; top: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
-			Streak:
-			<h4 id="streak"> </h4>
-		</div>
-	</div>
+    <div id="devSettings" class="d-flex flex-column mb-3">
+
+        <div class="d-flex flex-row justify-content-between">
+            <div style="width: 100%;" class = "form-range">
+                <label for="Sustain">Sustain length (s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input id="Sustain" type="range" min="0" max="2" step=".25" value="1" oninput=" this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;1</output>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <br>
+            <div style="width: 100%;" class="form-range">
+                <label for="trialDelay">Delay between Trials&nbsp;&nbsp;&nbsp;</label>
+                <input id="trialDelay" type="range" min="100" max="4000" step="100" value="2000" oninput=" this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;300</output>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <div style="width: 100%;" class="form-range">
+                <label for="sensoryDelay">Delay between Senses&nbsp;&nbsp;&nbsp;</label>
+                <input id="sensoryDelay" type="range" min="0" max="1000" step="50" value="300" oninput="this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;300&nbsp;&nbsp;&nbsp;</output>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <div style="width: 100%;" class="form-range">
+                <label for="intranoteDelay">Delay between Notes&nbsp;&nbsp;&nbsp;</label>
+                <input id="intranoteDelay" type="range" min="0" max="3000" step="50" value="700" oninput="this.nextElementSibling.value = this.value">
+                <output>&nbsp;&nbsp;700</output>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+            <div style="width: 100%;" class="form-range">
+                <label for="intrahapticDelay">Delay between Haptics&nbsp;&nbsp;&nbsp;</label>
+                <input id="intrahapticDelay" type="range" min="0" max="3000" step="50" value="700" width="100%" oninput="this.nextElementSibling.value = this.value">
+
+                <output>&nbsp;&nbsp;700</output>
+            </div>
+
+        </div>
+
+        <div class="mt-2 " style="width: 100%; height: 1px; background: darkgray;"></div>
+        <br>
+        <div style="">
+
+            <!--            <input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">-->
+            <!--            <label for="visualInput"> Perception Game </label><br>-->
+            <input type="checkbox" id="fixedC" name="fixedC" value="fixedC" class="">
+            <label for="fixedC"> Fixed in C</label>
+            <input type="checkbox" id="audioFeedback" name="audioFeedback" value="audioFeedback" class="">
+            <label for="audioFeedback"> Audio Feedback</label>
+            <input type="checkbox" id="visualFeedback" name="visualFeedback" value="visualFeedback" class="">
+            <label for="visualFeedback"> Visual Feedback</label>
+        </div>
+
+        <div class="mt-2" style="width: 100%; height: 1px; background: darkgray;"></div>
+
+        <br> <!-- Device status -->
+
+        <div id="batteryVoltage">Waiting for battery voltage...</div>
+
+
+    </div>
+
+
+    <div class="d-flex flex-row">
+        <button id="trainButton" onclick="setTraining()" class="btn btn-secondary btn-sm"
+                style="border-width: 2px; border-color: grey;">Training
+        </button>
+        <button id="testButton" onclick="setTest()" class="btn btn-secondary btn-sm ml-2"
+                style="border-width: 2px; border-color: grey;">Test
+        </button>
+        <button id="manualButton" onclick="setManual()" class="btn btn-secondary btn-sm ml-2"
+                style="border-width: 2px;">Manual
+        </button>
+        <button id="devButton" onclick="setDev()" class="btn btn-secondary btn-sm ml-2"
+                style="border-width: 2px;">Dev
+        </button>
+    </div>
+
+</div>
+
+
+<div style="position: absolute; left: 0px; bottom: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
+    <b>Input Modalities</b>
+    <div>
+        <input type="checkbox" id="visualInput" name="Input" value="visualInput" class="mt-2">
+        <label for="visualInput"> Visual Input </label><br>
+        <input type="checkbox" id="hapticInput" name="Input" value="hapticInput" class="">
+        <label for="hapticInput"> Haptic Input </label><br>
+        <input type="checkbox" id="cheatInput" name="Input" value="cheatInput" class="">
+        <label for="cheatInput"> Cheat Input </label><br>
+    </div>
+
+
+
+</div>
+
+<div style="position: absolute; bottom: 0px; right: 50%; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
+    Press Space to Repeat Note
+</div>
+
+<div>
+    <div class="d-flex justify-content-center align-items-center"
+         style="position: absolute; width: 100%; height: 60%; z-index: 5">
+        <h1 id="guesses"></h1>
+    </div>
+</div>
+<script>
+
+    // $('#guesses').hide();
+
+
+    $('#fixedC').change(function () {
+        if (this.checked) {
+            stateObject.fixedC = 1;
+        } else {
+            stateObject.fixedC = 0;
+        }
+    });
+
+    $('#audioFeedback').change(function () {
+        if (this.checked) {
+            stateObject.audioFeedback = 1;
+
+        } else {
+            stateObject.audioFeedback = 0;
+        }
+    });
+
+    $('#visualInput').change(function () {
+        if (this.checked) {
+            stateObject.visualInput = 1;
+        } else {
+            stateObject.visualInput = 0;
+        }
+    });
+
+    $('#hapticInput').change(function () {
+        if (this.checked) {
+            stateObject.hapticInput = 1;
+        } else {
+            stateObject.hapticInput = 0;
+        }
+    });
+
+    $('#cheatInput').change(function () {
+        if (this.checked) {
+            cheatSettings.hidden = false;
+            stateObject.cheatInput = 1;
+        } else {
+            cheatSettings.hidden = true;
+            stateObject.cheatInput = 0;
+        }
+    });
+</script>
+
+<div hidden id="cheatSettings" class="">
+    <div class="d-flex justify-content-center align-items-center"
+         style="position: absolute; width: 100%; height: 40%; z-index: 5">
+        <h6 id="prompt"></h6>
+    </div>
+</div>
+
+<div id="streakBox" class="">
+    <div style="position: absolute; right: 0px; top: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
+        Streak:
+        <h4 id="streak"></h4>
+    </div>
+</div>
 
 </body>
-  
+
 
 <script src="https://tonejs.github.io/build/Tone.js"></script>
-
+<script src="./states.js" type="application/javascript"></script>
 <script src="./interval.js" type="application/javascript"></script>
-  
+
 </html>

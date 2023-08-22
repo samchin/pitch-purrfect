@@ -38,8 +38,8 @@ function initializeState(){
     stateObject.sustain = 1;
     stateObject.trialDelay = 2000;
     stateObject.sensoryDelay = 200;
-    stateObject.intranoteDelay = 700;
-    stateObject.intrahapticDelay = 700;
+    stateObject.intranoteDelay = 600;
+    stateObject.intrahapticDelay = 600;
 
     stateObject.streak = 0;
 

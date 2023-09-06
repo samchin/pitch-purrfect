@@ -191,34 +191,32 @@ function checkNote(e) {
 
 	setSettings();
 
-	if (stateObject.mode === "Test") { // SINGLE GUESS
-		// endTrial(guessTime);
-		document.body.style.background = "#808080";
-		// guesses.style.display = "block";
-		// newNote(indexval);
-		// guesses.textContent = trialObject.correctIndexval + 1;
+	if (indexval < 0) { // REPEAT
+		// document.body.style.background = "#ffffff";
+		guesses.style.display = "none";
 
-		trialObject.guessTimes = guessTime;
-		trialObject.userGuesses = indexval;
-		updateStreak("Correct");
+		playNote(trialObject.correctIndexval, "#ffffff");
+		trialObject.repeats += 1;
 
-		endTrial(guessTime);
+	} else { // MULTI-GUESS
 
-		setTimeout(() => {
-			stateObject.trialNumber += 1;
-			newNote(trialObject.correctIndexval)
-		}, 200)	
-	}
-
-	else { // MULTI-GUESS
-
-		if (indexval < 0) { // REPEAT
-			// document.body.style.background = "#ffffff";
-			guesses.style.display = "none";
-
-			playNote(trialObject.correctIndexval, "#ffffff");
-			trialObject.repeats += 1;
-
+		if (stateObject.mode === "Test") { // SINGLE GUESS
+			// endTrial(guessTime);
+			document.body.style.background = "#808080";
+			// guesses.style.display = "block";
+			// newNote(indexval);
+			// guesses.textContent = trialObject.correctIndexval + 1;
+	
+			trialObject.guessTimes = guessTime;
+			trialObject.userGuesses = indexval;
+			updateStreak("Correct");
+	
+			endTrial(guessTime);
+	
+			setTimeout(() => {
+				stateObject.trialNumber += 1;
+				newNote(trialObject.correctIndexval)
+			}, 200)	
 		} else {
 
 			if (stateObject.mode === "Training") {

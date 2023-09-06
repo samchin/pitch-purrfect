@@ -192,11 +192,21 @@ function checkNote(e) {
 	setSettings();
 
 	if (stateObject.mode === "Test") { // SINGLE GUESS
-		endTrial(guessTime);
+		// endTrial(guessTime);
 		document.body.style.background = "#808080";
-		guesses.style.display = "block";
+		// guesses.style.display = "block";
+		// newNote(indexval);
+		// guesses.textContent = trialObject.correctIndexval + 1;
 
-		newNote(indexval);
+		trialObject.guessTimes = guessTime;
+		trialObject.userGuesses = indexval;
+
+		endTrial(guessTime);
+
+		setTimeout(() => {
+			stateObject.trialNumber += 1;
+			newNote(trialObject.correctIndexval)
+		}, 200)	
 	}
 
 	else { // MULTI-GUESS

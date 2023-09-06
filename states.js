@@ -109,6 +109,7 @@ function setTraining() {
     blankButtons();
     stateObject.mode = "Training"
     $("#trainButton").css("border-color", "grey");
+    $('#streakBox').hide();
     initialize();
 
 }
@@ -117,6 +118,8 @@ function setTest() {
     blankButtons();
     stateObject.mode = "Test";
     $("#testButton").css("border-color", "grey");
+    // streakBox.hidden = false;
+    $('#streakBox').show();
     initialize();
 }
 
@@ -126,6 +129,8 @@ function setManual() {
     blankButtons();
     stateObject.mode = "Manual";
     $("#manualButton").css("border-color", "grey");
+    $('#streakBox').hide();
+
     toggleManualSettings(true);
 }
 

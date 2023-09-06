@@ -200,6 +200,7 @@ function checkNote(e) {
 
 		trialObject.guessTimes = guessTime;
 		trialObject.userGuesses = indexval;
+		updateStreak("Correct");
 
 		endTrial(guessTime);
 
@@ -229,14 +230,12 @@ function checkNote(e) {
 
 				if (indexval === trialObject.correctIndexval) { // CORRECT
 					// Mark Correct
-					updateStreak("Correct");
-					// document.body.style.background = "#2a9d8f";
+					// updateStreak("Correct");
 					color = "#2a9d8f";
 
 				} else { // INCORRECT
 					// Mark Correct
-					updateStreak("Incorrect");
-					//document.body.style.background ="#e76f51";
+					// updateStreak("Incorrect");
 					color = "#e76f51";
 
 				}
@@ -244,12 +243,7 @@ function checkNote(e) {
 				endTrial(guessTime);
 				document.body.style.background = color;
 
-				// setTimeout(() => {
-				// 	guesses.textContent = trialObject.correctIndexval + 1;
-				//
-				// 	playNote(trialObject.correctIndexval, "#2a9d8f");
-				// }, 700) // CATHYYYYYYY
-				//
+
 				setTimeout(() => {
 					stateObject.trialNumber += 1;
 					newNote(trialObject.correctIndexval)

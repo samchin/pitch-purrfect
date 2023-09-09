@@ -117,7 +117,7 @@ function playNote(indexval, color) {
 	}, stateObject.intranoteDelay);
 
 	if (stateObject.hapticInput === 1) {
-		if (stateObject.trialNumber % 2 === 1 || stateObject.mode === "Manual") {
+		// if (stateObject.trialNumber % 2 === 1 || stateObject.mode === "Manual") {
 			let hapticBase = hapArr[numHaptic] //last haptic module
 			// console.log("hapBase index: ")
 			// console.log(hapticBase)
@@ -132,7 +132,7 @@ function playNote(indexval, color) {
 				// console.log(numHaptic - indexval)
 				bleInstance.requestSetChannelGainUpdate(hapTop, hapTop);
 			}, stateObject.intrahapticDelay);
-		}
+		
 	}
 	// guesses.textContent = ''
 }

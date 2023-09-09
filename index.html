@@ -32,11 +32,20 @@
         <input type="text" id="deid" name="deid" required>
 
         <span style="display:block; height: 20px;"></span>
+
                   <label>
                       I have input the deidentifer.
                       <input id="allow-button" type="checkbox" />
                   </label>
+
+                  <label>
+                    This is a haptic trial
+                    <input id="haptic-checkbox" type="checkbox" />
+                </label>
+        
                   <span style="display:block; height: 20px;"></span>
+
+ 
 
         <button id="startGame" disabled style="width: 20% !important; height: 10% !important;" onclick="setTraining()"
                 class="btn btn-secondary btn-sm"
@@ -49,6 +58,7 @@
     <script>
         const startButton = document.getElementById("startGame");
         const dialog = document.getElementById("startingDialog");
+        const hapticCheckbox = document.getElementById("haptic-checkbox");
         const allowButtonCheckbox = document.getElementById("allow-button");
         const startGame = document.getElementById("startGame");
 
@@ -56,6 +66,10 @@
         });
         allowButtonCheckbox.addEventListener("change", (event) => {
             startGame.disabled = !event.target.checked;
+        }, false);
+
+        hapticCheckbox.addEventListener("change", (event) => {
+            document.getElementById("hapticInput").checked = true;
         }, false);
 
         startButton.addEventListener("click", () => {
@@ -68,6 +82,7 @@
             initializeState();
             initializeTrial();
             stateObject.deId = document.getElementById("deid").value;
+
             console.log(stateObject.deId)
         });
 

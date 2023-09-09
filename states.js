@@ -106,6 +106,7 @@ function blankButtons() {
     $("#testButton").css("border-color", "transparent");
     $("#manualButton").css("border-color", "transparent");
     $("#devButton").css("border-color", "transparent");
+    $("#spatialButton").css("border-color", "transparent");
     toggleManualSettings(false);
     toggleDevSettings(false);
 }
@@ -117,6 +118,15 @@ function setTraining() {
     $('#streakBox').hide();
     initialize();
 
+}
+
+function setSpatial() {
+    blankButtons();
+    stateObject.mode = "Spatial"
+    $("#spatialButton").css("border-color", "grey");
+    stateObject.streak = 0;
+    $('#streakBox').show();
+    initialize();
 }
 
 function setTest() {
@@ -142,6 +152,8 @@ function setManual() {
 
     toggleManualSettings(true);
 }
+
+
 
 function setDev() {
     blankButtons();

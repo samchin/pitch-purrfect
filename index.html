@@ -178,8 +178,6 @@
         <br>
         <div style="">
 
-            <!--            <input type="checkbox" id="visualInput" name="visualInput" value="visualInput" class="mt-2">-->
-            <!--            <label for="visualInput"> Perception Game </label><br>-->
             <input type="checkbox" id="fixedC" name="fixedC" value="fixedC" class="">
             <label for="fixedC"> Fixed in C</label>
             <input type="checkbox" id="audioFeedback" name="audioFeedback" value="audioFeedback" class="">
@@ -199,18 +197,26 @@
 
 
     <div class="d-flex flex-row">
-        <button id="trainButton" onclick="setTraining()" class="btn btn-secondary btn-sm"
+
+        <button id="spatialButton" onclick="setSpatial()" class="btn btn-secondary btn-sm"
+        style="border-width: 2px; border-color: grey;">Spatial
+        </button>
+
+        <button id="testButton" onclick="setTest()" class="btn btn-secondary btn-sm ml-2"
+        style="border-width: 2px; border-color: grey;">Test
+        </button>
+
+        <button id="trainButton" onclick="setTraining()" class="btn btn-secondary btn-sm ml-2"
                 style="border-width: 2px; border-color: grey;">Training
         </button>
-        <button id="testButton" onclick="setTest()" class="btn btn-secondary btn-sm ml-2"
-                style="border-width: 2px; border-color: grey;">Test
-        </button>
+
         <button id="manualButton" onclick="setManual()" class="btn btn-secondary btn-sm ml-2"
                 style="border-width: 2px;">Manual
         </button>
         <button id="devButton" onclick="setDev()" class="btn btn-secondary btn-sm ml-2"
                 style="border-width: 2px;">Dev
         </button>
+
     </div>
 
 </div>

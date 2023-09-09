@@ -54,12 +54,22 @@ const prompt = document.getElementById('prompt');
 const guesses = document.getElementById('guesses');
 const streak = document.getElementById('streak');
 
+const spatialPairs = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
+					  [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7],
+					  [2, 3], [2, 4], [2, 5], [2, 6], [2, 7],
+					  [3, 4], [3, 5], [3, 6], [3, 7],
+					  [4, 5], [4, 6], [4, 7],
+					  [5, 6], [5, 7],
+					  [6, 7]];
+
+
+
 const regex = /\d+/g;
-const notes = ["C4", "D4", "E4", "F4", "G4", "A5", "B5", "C5"]
+const notes = ["C4", "D4", "E4", "F4", "G4", "A5", "B5", "C5"];
 const majorIntervals = [0, 2, 4, 5, 7, 9, 11, 12];
 const allNotes = [	"C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
 					"C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
-					"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4"]
+					"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4"];
 
 
 
@@ -95,6 +105,15 @@ function setSettings(e){
 		stateObject.baseIndex = 24
 	}
 }
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+
 
 function playNote(indexval, color) {
 
@@ -137,6 +156,8 @@ function playNote(indexval, color) {
 	// guesses.textContent = ''
 }
 
+
+
 function randomIndexval(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -167,9 +188,8 @@ function newNote(oldIndexval){
 		playNote(trialObject.correctIndexval, "#ffffff")
 	}, stateObject.trialDelay);
 
-
-
 }
+
 
 function updateStreak(result) {
 	if (result === "Incorrect") {
@@ -198,7 +218,7 @@ function checkNote(e) {
 		playNote(trialObject.correctIndexval, "#ffffff");
 		trialObject.repeats += 1;
 
-	} else { // MULTI-GUESS
+	} else { 
 
 		if (stateObject.mode === "Test") { // SINGLE GUESS
 			// endTrial(guessTime);
@@ -217,7 +237,23 @@ function checkNote(e) {
 				stateObject.trialNumber += 1;
 				newNote(trialObject.correctIndexval)
 			}, 200)	
-		} else {
+		} 
+
+		if (stateObject.mode === "Spatial") { // SINGLE GUESS
+			document.body.style.background = "#FDDA0D";
+
+			trialObject.guessTimes = guessTime;
+			trialObject.userGuesses = -1;
+			updateStreak("Correct");
+			endTrial(guessTime);
+	
+			setTimeout(() => {
+				stateObject.trialNumber += 1;
+				newNote(trialObject.correctIndexval)
+			}, 200)	
+		} 
+		
+		else {
 
 			if (stateObject.mode === "Training") {
 				guesses.textContent = trialObject.correctIndexval + 1;

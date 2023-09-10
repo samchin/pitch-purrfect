@@ -76,6 +76,17 @@ function sendData() {
 
 
 
+function toggleSpatialSettings(enable) {
+    if (!enable) {
+        $('#spatialSettings').removeClass("d-flex");
+        $('#spatialSettings').hide();
+    } else {
+        $('#spatialSettings').show();
+        $('#spatialSettings').addClass("d-flex");
+    }
+}
+
+
 
 function toggleManualSettings(enable) {
     if (!enable) {
@@ -109,6 +120,8 @@ function blankButtons() {
     $("#spatialButton").css("border-color", "transparent");
     toggleManualSettings(false);
     toggleDevSettings(false);
+    toggleSpatialSettings(false);
+
 }
 function setTraining() {
     blankButtons();
@@ -127,6 +140,8 @@ function setSpatial() {
     stateObject.streak = 0;
     $('#streakBox').show();
     initialize();
+
+    toggleSpatialSettings(true);
 }
 
 function setTest() {

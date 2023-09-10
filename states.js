@@ -45,6 +45,13 @@ function initializeState(){
 
     stateObject.trialNumber = 0;
     // stateObject.trialObject = trialObject;
+<<<<<<< HEAD
+=======
+
+    if(document.getElementById("hapticInput").checked === true){
+        stateObject.hapticInput = 1;
+    }
+>>>>>>> sc.v2
 }
 
 function sendData() {
@@ -70,6 +77,17 @@ function sendData() {
 
 }
 
+
+
+function toggleSpatialSettings(enable) {
+    if (!enable) {
+        $('#spatialSettings').removeClass("d-flex");
+        $('#spatialSettings').hide();
+    } else {
+        $('#spatialSettings').show();
+        $('#spatialSettings').addClass("d-flex");
+    }
+}
 
 
 
@@ -102,21 +120,41 @@ function blankButtons() {
     $("#testButton").css("border-color", "transparent");
     $("#manualButton").css("border-color", "transparent");
     $("#devButton").css("border-color", "transparent");
+    $("#spatialButton").css("border-color", "transparent");
     toggleManualSettings(false);
     toggleDevSettings(false);
+    toggleSpatialSettings(false);
+
 }
 function setTraining() {
     blankButtons();
     stateObject.mode = "Training"
     $("#trainButton").css("border-color", "grey");
+    stateObject.streak = 0;
+    $('#streakBox').hide();
     initialize();
 
+}
+
+function setSpatial() {
+    blankButtons();
+    stateObject.mode = "Spatial"
+    $("#spatialButton").css("border-color", "grey");
+    stateObject.streak = 0;
+    $('#streakBox').show();
+    initialize();
+
+    toggleSpatialSettings(true);
 }
 
 function setTest() {
     blankButtons();
     stateObject.mode = "Test";
     $("#testButton").css("border-color", "grey");
+    // streakBox.hidden = false;
+    $('#streakBox').show();
+    stateObject.streak = 0;
+    streak.textContent = stateObject.streak;
     initialize();
 }
 
@@ -126,8 +164,14 @@ function setManual() {
     blankButtons();
     stateObject.mode = "Manual";
     $("#manualButton").css("border-color", "grey");
+    $('#streakBox').hide();
+    stateObject.streak = 0;
+    streak.textContent = stateObject.streak;
+
     toggleManualSettings(true);
 }
+
+
 
 function setDev() {
     blankButtons();

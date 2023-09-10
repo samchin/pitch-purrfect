@@ -77,6 +77,10 @@
                 bleInstance.connectionToggle();
             }, 100)
 
+            if (window.location.hash === "#test"){
+                setTest()
+            }
+
             dialog.close("Play game");
             initializeState();
             initializeTrial();
@@ -255,7 +259,6 @@
 <script>
 
     // $('#guesses').hide();
-
 
     $('#fixedC').change(function () {
         if (this.checked) {

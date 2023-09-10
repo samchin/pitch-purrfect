@@ -45,13 +45,10 @@ function initializeState(){
 
     stateObject.trialNumber = 0;
     // stateObject.trialObject = trialObject;
-<<<<<<< HEAD
-=======
 
     if(document.getElementById("hapticInput").checked === true){
         stateObject.hapticInput = 1;
     }
->>>>>>> sc.v2
 }
 
 function sendData() {

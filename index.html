@@ -77,15 +77,17 @@
                 bleInstance.connectionToggle();
             }, 100)
 
-            if (window.location.hash === "#test"){
-                setTest()
-            }
+         
 
             dialog.close("Play game");
             initializeState();
             initializeTrial();
             stateObject.deId = document.getElementById("deid").value;
             console.log(stateObject.deId)
+
+            if (window.location.hash === "#test"){
+                setTest()
+            }
         });
 
         dialog.showModal();

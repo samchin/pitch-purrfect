@@ -88,6 +88,12 @@
             if (window.location.hash === "#test"){
                 setTest()
             }
+
+            if (window.location.hash === "#visual"){
+                stateObject.visualInput = 1;
+                document.getElementById("visualInput").checked = true;
+                visualStimuli.hidden = false;
+            }
         });
 
         dialog.showModal();

@@ -243,9 +243,13 @@
         <input type="checkbox" id="cheatInput" name="Input" value="cheatInput" class="">
         <label for="cheatInput"> Cheat Input </label><br>
     </div>
+</div>
 
+<div hidden id="visualStimuli"  class="justify-content-center align-items-center" style="position: absolute; left:45% ; bottom: 20%; margin: 10px">
 
-
+    <!-- <div class="justify-content-center align-items-center"> -->
+         <img src="visual/1-1.png" id="visualImage" style="width:92px;height:388px;"/>
+    <!-- </div> -->
 </div>
 
 <div style="position: absolute; bottom: 0px; right: 50%; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">
@@ -254,7 +258,7 @@
 
 <div>
     <div class="d-flex justify-content-center align-items-center"
-         style="position: absolute; width: 100%; height: 60%; z-index: 5">
+         style="position: absolute; width: 100%; height: 25%; z-index: 5">
         <h1 id="guesses"></h1>
     </div>
 </div>
@@ -282,7 +286,9 @@
     $('#visualInput').change(function () {
         if (this.checked) {
             stateObject.visualInput = 1;
+            visualStimuli.hidden = false;
         } else {
+            visualStimuli.hidden = true;
             stateObject.visualInput = 0;
         }
     });
@@ -312,6 +318,7 @@
         <h6 id="prompt"></h6>
     </div>
 </div>
+
 
 <div id="streakBox" class="">
     <div style="position: absolute; right: 0px; top: 0px; margin: 10px; z-index: 200; background: lightgray; padding: 14px 20px; border-radius: 8px; font-size: smaller !important;">

@@ -72,6 +72,8 @@ const allNotes = [	"C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2
 					"C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4"];
 
 
+const allVisuals = ["visual/1-1.png", "visual/1-2.png", "visual/1-3.png", "visual/1-4.png", 
+					"visual/1-5.png", "visual/1-6.png", "visual/1-7.png", "visual/1-8.png" ]
 
 window.addEventListener('keydown', _.debounce(checkNote, 500));
 
@@ -126,17 +128,19 @@ function playNote(indexval, color) {
 	trialObject.correctNote = indexval
 	prompt.textContent = indexval + 1
 	topIndex = stateObject.baseIndex + majorIntervals[indexval]
-	// console.log("-----")
-	// console.log("AUDIO")
 
 	sampler.triggerAttackRelease(allNotes[stateObject.baseIndex], stateObject.sustain)
+
+	document.getElementById("visualImage").src=allVisuals[indexval]
+
+	console.log(document.getElementById("visualImage").src=allVisuals[indexval])
+
 
 	setTimeout(function () {
 		sampler.triggerAttackRelease(allNotes[topIndex], stateObject.sustain)
 	}, stateObject.intranoteDelay);
 
 	if (stateObject.hapticInput === 1) {
-		// if (stateObject.trialNumber % 2 === 1 || stateObject.mode === "Manual") {
 			let hapticBase = hapArr[numHaptic] //last haptic module
 			// console.log("hapBase index: ")
 			// console.log(hapticBase)
@@ -153,6 +157,7 @@ function playNote(indexval, color) {
 			}, stateObject.intrahapticDelay);
 		
 	}
+
 	// guesses.textContent = ''
 }
 
@@ -205,9 +210,14 @@ function updateStreak(result) {
 
 function checkNote(e) {
 	const guessTime = Date.now() - trialObject.startTime;
-	const keynumber = Number(e.code.match(regex))
+	keynumber = Number(e.code.match(regex))
+	if (e.code === 'Digit0'){
+		keynumber = 9
+	}
+
 	const indexval = keynumber - 1
 	let color = "#ffffff"
+
 
 	setSettings();
 
